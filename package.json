@@ -12,7 +12,10 @@
 	],
 	"main": "./out/src/extension",
 	"activationEvents": [
-		"onLanguage:cpp"
+		"onLanguage:cpp",
+		"onLanguage:c",
+		"onLanguage:objective-c",
+		"onLanguage:java"
 	],
 	"contributes": {
 		"configuration": {

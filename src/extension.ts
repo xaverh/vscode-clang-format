@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import { CLANG_MODE } from './clangMode';
+import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider {
@@ -50,34 +50,15 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 	}
 
 }
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-/*
-export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Your extension "clang-format" is now active!'); 
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
-	var disposable = vscode.commands.registerCommand('extension.sayHello', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World!');
-	});
-
-	context.subscriptions.push(disposable);
-}
-*/
 
 let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
 
-	ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(CLANG_MODE, new ClangDocumentFormattingEditProvider()));
+	ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(CPP_MODE, new ClangDocumentFormattingEditProvider()));
+	ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(C_MODE, new ClangDocumentFormattingEditProvider()));
+	ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(JAVA_MODE, new ClangDocumentFormattingEditProvider()));
+	ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(OBJECTIVE_C_MODE, new ClangDocumentFormattingEditProvider()));
 
 }
 
