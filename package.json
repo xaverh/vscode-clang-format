@@ -2,7 +2,7 @@
 	"name": "clang-format",
 	"displayName": "Clang-Format",
 	"description": "Bind Clang-Format to VS Code",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "xaver",
 	"engines": {
 		"vscode": "^0.10.1"

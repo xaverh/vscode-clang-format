@@ -8,3 +8,7 @@ If clang-format is installed and in PATH, C/C++ etc source files can be formatte
 ## Roadmap
 
 Options for the Visual Studio Code extension (eg choice of languages, format at save, etc).
+
+## Source code
+
+Available on github: https://github.com/xaverh/vscode-clang-format-provider
