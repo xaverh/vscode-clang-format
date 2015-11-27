@@ -1,13 +1,10 @@
 # README
-## This is the README for your extension "clang-format" 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+## Clang-Format
+[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Protobuf code. It can be configured with a config file within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+## Usage
+If clang-format is installed and in PATH, C/C++ etc source files can be formatted with Visual Studio Code's built in formatter (Usually: Ctrl+Shift+F).
 
-### For more information
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+## Roadmap
 
-** Enjoy!**
+Options for the Visual Studio Code extension (eg choice of languages, format at save, etc).
