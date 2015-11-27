@@ -10,15 +10,22 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:extension.sayHello"
-	],
 	"main": "./out/src/extension",
+	"activationEvents": [
+		"onLanguage:cpp"
+	],
 	"contributes": {
-		"commands": [{
-			"command": "extension.sayHello",
-			"title": "Hello World"
-		}]
+		"configuration": {
+			"type": "object",
+			"title": "Clang-Format configuration",
+			"properties": {
+				"clang-format.formatOnSave": {
+					"type": "boolean",
+					"default": false,
+					"description": "Run 'clang-format' on save."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
