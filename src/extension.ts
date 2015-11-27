@@ -31,7 +31,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 			cp.execFile(formatCommandBinPath, [filename], {}, (err, stdout, stderr) => {
 				try {
 					if (err && (<any>err).code == "ENOENT") {
-						vscode.window.showInformationMessage("The '" + formatCommandBinPath + "' command is not available.  Please check your go.formatTool user setting and ensure it is installed.");
+						vscode.window.showInformationMessage("The '" + formatCommandBinPath + "' command is not available.  Please check your clang.formatTool user setting and ensure it is installed.");
 						return resolve(null);
 					}
 					if (err) return reject("Cannot format due to syntax errors.");
