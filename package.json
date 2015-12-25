@@ -2,7 +2,7 @@
 	"name": "clang-format",
 	"displayName": "Clang-Format",
 	"description": "Bind Clang-Format to VS Code",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "xaver",
 	"engines": {
 		"vscode": "^0.10.1"
@@ -38,5 +38,10 @@
 		"typescript": "^1.6.2",
 		"vscode": "0.10.x"
 	},
-	"icon" : "clang-format.png"
+	"icon" : "clang-format.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/xaverh/vscode-clang-format-provider"
+	}
+	"licenseUrl": "https://raw.githubusercontent.com/xaverh/vscode-clang-format-provider/master/LICENSE.md"
 }
