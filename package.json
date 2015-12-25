@@ -43,5 +43,5 @@
 		"type": "git",
 		"url": "https://github.com/xaverh/vscode-clang-format-provider"
 	},
-	"license": "https://raw.githubusercontent.com/xaverh/vscode-clang-format-provider/master/LICENSE.md"
+	"license": "MIT"
 }
