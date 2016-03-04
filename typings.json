@@ -8,7 +8,6 @@
     ],
     "devDependencies": {},
     "ambientDevDependencies": {
-        "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff",
         "sax": "github:DefinitelyTyped/DefinitelyTyped/sax/sax.d.ts#df7f9a52652656faf977bc34f52bea4891275fe0"
     }
 }

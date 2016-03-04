@@ -2,14 +2,13 @@
 	"name": "clang-format",
 	"displayName": "Clang-Format",
 	"description": "Bind Clang-Format to VS Code",
-	"version": "0.0.4",
-	"publisher": "xaver",
+	"version": "0.1.0",
+	"publisher": "ioachim",
 	"engines": {
 		"vscode": "^0.10.1"
 	},
     "dependencies": {
-        "xml-parser" : "^1.2.1",
-        "entities" : "^1.1.1"
+        "sax" : "^1.1.5"
     },
 	"categories": [
 		"Other"
