@@ -7,6 +7,10 @@
 	"engines": {
 		"vscode": "^0.10.1"
 	},
+    "dependencies": {
+        "xml-parser" : "^1.2.1",
+        "entities" : "^1.1.1"
+    },
 	"categories": [
 		"Other"
 	],
