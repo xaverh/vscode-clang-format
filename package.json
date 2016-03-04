@@ -1,8 +1,8 @@
 {
 	"name": "clang-format",
-	"displayName": "Clang-Format",
-	"description": "Bind Clang-Format to VS Code",
-	"version": "0.1.0",
+	"displayName": "Clang-Format v2",
+	"description": "Document Formatting provider for Clang-Format",
+	"version": "0.1.1",
 	"publisher": "ioachim",
 	"engines": {
 		"vscode": "^0.10.1"
