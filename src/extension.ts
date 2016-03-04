@@ -122,7 +122,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 formatArgs.push(`-offset=${offset}`, `-length=${length}`)
             }
 
-            var child = cp.execFile(formatCommandBinPath, formatArgs, {}, childCompleted);
+            var workingPath = vscode.workspace.rootPath;;
+            if(!document.isUntitled) {
+                workingPath = path.dirname(document.fileName);
+            }
+
+            var child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
             child.stdin.end(document.getText());
 
             token.onCancellationRequested(() => {
