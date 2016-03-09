@@ -3,7 +3,7 @@
 	"displayName": "Clang-Format v2",
 	"description": "Document Formatting provider for Clang-Format",
 	"version": "0.1.2",
-	"publisher": "ioachim",
+	"publisher": "xaver",
 	"engines": {
 		"vscode": "^0.10.1"
 	},
