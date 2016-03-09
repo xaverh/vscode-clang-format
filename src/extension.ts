@@ -3,7 +3,7 @@ import cp = require('child_process');
 import path = require('path');
 import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
-import sax = require('sax')
+import sax = require('sax');
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
     private formatCommand = 'clang-format';
@@ -73,7 +73,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 var end = document.positionAt(currentEdit.offset + currentEdit.length);
 
                 var editRange = new vscode.Range(start, end);
-               
+
                 edits.push(new vscode.TextEdit(editRange, currentEdit.text));
                 currentEdit = null;
             }
@@ -107,7 +107,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                         return value;
                     };
                     return resolve(this.getEdits(document, stdout));
-                    
+
                 } catch (e) {
                     reject(e);
                 }
