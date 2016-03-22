@@ -2,11 +2,17 @@
 
 import fs = require('fs');
 import path = require('path');
+import vscode = require('vscode');
 
 var binPathCache: { [bin: string]: string; } = {}
 
 export function getBinPath(binname: string) {
 	binname = correctBinname(binname);
+    binname =  vscode.workspace.getConfiguration('clang-format').get<string>("executable");
+    if(fs.existsSync(binname)){
+        binPathCache[binname]=binname;
+        return binname;
+    }
 	if (binPathCache[binname]) return binPathCache[binname];
 
 	if (process.env["PATH"]) {
