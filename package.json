@@ -27,9 +27,9 @@
                     "default": false,
                     "description": "Run 'clang-format' on save."
                 },
-                "clang-format.executable":{
-                    "type":"string",
-                    "default":"clang-format",
+                "clang-format.executable": {
+                    "type": "string",
+                    "default": "clang-format",
                     "description": "clang-format command or the path to the clang-format executable"
                 }
             }
