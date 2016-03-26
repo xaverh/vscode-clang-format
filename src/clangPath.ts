@@ -7,8 +7,15 @@ var binPathCache: { [bin: string]: string; } = {}
 
 export function getBinPath(binname: string) {
 	binname = correctBinname(binname);
+    
 	if (binPathCache[binname]) return binPathCache[binname];
 
+    // clang-format.executable has a valid absolute path
+    if (fs.existsSync(binname)) {
+        binPathCache[binname] = binname;
+        return binname;
+    }
+    
 	if (process.env["PATH"]) {
 		var pathparts = process.env["PATH"].split(path.delimiter);
 		for (var i = 0; i < pathparts.length; i++) {
@@ -26,8 +33,13 @@ export function getBinPath(binname: string) {
 }
 
 function correctBinname(binname: string) {
-	if (process.platform === 'win32')
-		return binname + ".exe";
-	else
+	if (process.platform === 'win32') {
+        if(binname.substr(binname.length - 4).toLowerCase() !== '.exe') {
+		    return binname + ".exe";
+        } else {
+            return binname;
+        }
+    } else {
 		return binname
+    }
 }
