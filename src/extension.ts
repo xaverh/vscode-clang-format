@@ -139,14 +139,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.defaultConfigure.style;
     }
     
-    private convToJson(input: string) {
-        if (input) {
-            let res = `"${input.replace(/([\\\"])/g, "\\$1")}"`;
-        }
-        
-        return input;
-    }
-    
     private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
