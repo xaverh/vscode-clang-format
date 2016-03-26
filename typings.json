@@ -1,13 +1,13 @@
 {
-    "name": "clang-format",
-    "dependencies": {},
-    "exclude": [
-        "typings/browser",
-        "typings/browser.d.ts",
-        "node_modules"
-    ],
-    "devDependencies": {},
-    "ambientDevDependencies": {
-        "sax": "github:DefinitelyTyped/DefinitelyTyped/sax/sax.d.ts#df7f9a52652656faf977bc34f52bea4891275fe0"
-    }
+	"name": "clang-format",
+	"dependencies": {},
+	"exclude": [
+		"typings/browser",
+		"typings/browser.d.ts",
+		"node_modules"
+	],
+	"devDependencies": {},
+	"ambientDependencies": {
+		"sax": "registry:dt/sax#0.0.0+20160225202428"
+	}
 }

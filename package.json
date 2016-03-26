@@ -1,35 +1,32 @@
 {
-	"name": "clang-format",
-	"displayName": "Clang-Format v2",
-	"description": "Document Formatting provider for Clang-Format",
-	"version": "0.1.2",
-	"publisher": "ioachim",
-	"engines": {
-		"vscode": "^0.10.1"
-	},
-    "dependencies": {
-        "sax" : "^1.1.5"
+    "name": "clang-format",
+    "displayName": "Clang-Format",
+    "description": "Use Clang-Format in Visual Studio Code",
+    "version": "0.2.0",
+    "publisher": "xaver",
+    "engines": {
+        "vscode": "^0.10.10"
     },
-	"categories": [
-		"Other"
-	],
-	"main": "./out/src/extension",
-	"activationEvents": [
-		"onLanguage:cpp",
-		"onLanguage:c",
-		"onLanguage:objective-c",
-		"onLanguage:java"
-	],
-	"contributes": {
-		"configuration": {
-			"type": "object",
-			"title": "Clang-Format configuration",
-			"properties": {
-				"clang-format.formatOnSave": {
-					"type": "boolean",
-					"default": false,
-					"description": "Run 'clang-format' on save."
-				},
+    "categories": [
+        "Other"
+    ],
+    "main": "./out/src/extension",
+    "activationEvents": [
+        "onLanguage:cpp",
+        "onLanguage:c",
+        "onLanguage:objective-c",
+        "onLanguage:java"
+    ],
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Clang-Format configuration",
+            "properties": {
+                "clang-format.formatOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run 'clang-format' on save."
+                },
                 "clang-format.executable": {
 					"type": "string",
 					"default": "clang-format",
@@ -38,28 +35,29 @@
                 "clang-format.style": {
 					"type": "string",
 					"default": "file",
-					"description": "clang-format style.(-style=value, value can be file， LLVM, Google, Chromium, Mozilla, WebKit or json configure)"
+					"description": "clang-format style.(-style=value, value can be file, LLVM, Google, Chromium, Mozilla, WebKit or json configure)"
 				},
                 "clang-format.fallbackStyle": {
 					"type": "string",
 					"default": "none",
 					"description": "clang-format fallback style.(-fallback-style=value, value can be none, LLVM, Google, Chromium, Mozilla, WebKit)"
 				}
-			}
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./"
-	},
-	"devDependencies": {
-		"typescript": "^1.6.2",
-		"vscode": "0.10.x"
-	},
-	"icon" : "clang-format.png",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/xaverh/vscode-clang-format-provider"
-	},
-	"license": "MIT"
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "typescript": "^1.6.2",
+        "vscode": "0.10.x"
+    },
+    "icon": "clang-format.png",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xaverh/vscode-clang-format-provider"
+    },
+    "license": "MIT"
 }
