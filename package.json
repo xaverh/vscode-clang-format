@@ -29,6 +29,21 @@
 					"type": "boolean",
 					"default": false,
 					"description": "Run 'clang-format' on save."
+				},
+                "clang-format.executable": {
+					"type": "string",
+					"default": "clang-format",
+					"description": "clang-format executable path"
+				},
+                "clang-format.style": {
+					"type": "string",
+					"default": "file",
+					"description": "clang-format style.(-style=value, value can be file， LLVM, Google, Chromium, Mozilla, WebKit or json configure)"
+				},
+                "clang-format.fallbackStyle": {
+					"type": "string",
+					"default": "none",
+					"description": "clang-format fallback style.(-fallback-style=value, value can be none, LLVM, Google, Chromium, Mozilla, WebKit)"
 				}
 			}
 		}

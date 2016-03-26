@@ -6,16 +6,31 @@ import { getBinPath } from './clangPath';
 import sax = require('sax')
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
-    private formatCommand = 'clang-format';
-
-	/*
-		constructor() {
-			let formatTool = vscode.workspace.getConfiguration('cpp')['formatTool'];
-			if (formatTool) {
-				this.formatCommand = formatTool;
-			}
-		}
-	*/
+    private defaultConfigure = {
+        executable: 'clang-format',
+        style: 'file',
+        fallbackStyle: 'none'
+    };
+	
+    /*
+    constructor() {
+        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('executable');
+        if (strConf) {
+            this.defaultConfigure.executable = strConf;
+        }
+        
+        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+        if (strConf) {
+            this.defaultConfigure.style = strConf;
+        }
+        
+        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
+        if (strConf) {
+            this.defaultConfigure.fallbackStyle = strConf;
+        }
+    }
+    */
+	
 
     public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return this.doFormatDocument(document, null, options, token);
@@ -88,11 +103,55 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         });
     }
 
+    /// Get execute name in clang-format.executable, if not found, use default value
+    /// If configure has changed, it will get the new value
+    private getExecutableName() {
+        let execPath = vscode.workspace.getConfiguration('clang-format').get<string>('executable');
+        if (execPath) {
+            return execPath;
+        }
+        
+        return this.defaultConfigure.executable;
+    }
+    
+    private getStyle() {
+        let ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+        if (ret.trim()) {
+            ret = ret.trim();
+        } else {
+            ret = this.defaultConfigure.style;
+        }
+        
+        // Custom style
+        if (ret.match(/[\\\{\" ]/)) {
+            return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
+        }
+        
+        return ret;
+    }  
+    
+    private getFallbackStyle() {
+        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
+        if (strConf.trim()) {
+            return strConf;
+        }
+        
+        return this.defaultConfigure.style;
+    }
+    
+    private convToJson(input: string) {
+        if (input) {
+            let res = `"${input.replace(/([\\\"])/g, "\\$1")}"`;
+        }
+        
+        return input;
+    }
+    
     private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
 
-            var formatCommandBinPath = getBinPath(this.formatCommand);
+            var formatCommandBinPath = getBinPath(this.getExecutableName());
 
             var childCompleted = (err, stdout, stderr) => {
                 try {
@@ -114,6 +173,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             };
 
             var formatArgs = ['-output-replacements-xml'];
+            formatArgs.push(`-style=${this.getStyle()}`);
+            formatArgs.push(`-fallback-style=${this.getFallbackStyle()}`);
 
             if (range) {
                 var offset = document.offsetAt(range.start);
@@ -134,10 +195,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 child.kill();
                 reject("Cancelation requested");
             });
-
-
-
-
         });
     }
 
