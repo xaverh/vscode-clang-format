@@ -11,27 +11,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         style: 'file',
         fallbackStyle: 'none'
     };
-	
-    /*
-    constructor() {
-        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('executable');
-        if (strConf) {
-            this.defaultConfigure.executable = strConf;
-        }
-        
-        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('style');
-        if (strConf) {
-            this.defaultConfigure.style = strConf;
-        }
-        
-        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
-        if (strConf) {
-            this.defaultConfigure.fallbackStyle = strConf;
-        }
-    }
-    */
-	
-
+    
     public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return this.doFormatDocument(document, null, options, token);
     }
