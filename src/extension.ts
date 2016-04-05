@@ -1,9 +1,12 @@
+"use strict";
+
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
+import dmp = require('diff-match-patch');
 import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
-import sax = require('sax');
+// import sax = require('sax');
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
     private defaultConfigure = {
@@ -20,68 +23,68 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.doFormatDocument(document, range, options, token);
     }
 
-    private getEdits(document: vscode.TextDocument, xml: string): Thenable<vscode.TextEdit[]> {
-        return new Promise((resolve, reject) => {
-            var options = { trim: false, normalize: false, loose: true }
-            var parser = sax.parser(true, options);
+    // private getEdits(document: vscode.TextDocument, xml: string): Thenable<vscode.TextEdit[]> {
+    //     return new Promise((resolve, reject) => {
+    //         var options = { trim: false, normalize: false, loose: true }
+    //         var parser = sax.parser(true, options);
 
-            var edits: vscode.TextEdit[] = [];
-            var currentEdit: { length: number, offset: number, text: string };
+    //         var edits: vscode.TextEdit[] = [];
+    //         var currentEdit: { length: number, offset: number, text: string };
 
-            parser.onerror = (err) => {
-                reject(err.message);
-            };
-
-
-            parser.onopentag = (tag) => {
-                if (currentEdit) { reject("Malformed output"); }
-
-                switch (tag.name) {
-                    case "replacements":
-                        return;
-
-                    case "replacement":
-                        currentEdit = {
-                            length: parseInt(tag.attributes['length'].toString()),
-                            offset: parseInt(tag.attributes['offset'].toString()),
-                            text: ''
-                        };
-                        break;
-
-                    default:
-                        reject(`Unexpected tag ${tag.name}`);
-                }
+    //         parser.onerror = (err) => {
+    //             reject(err.message);
+    //         };
 
 
-            };
+    //         parser.onopentag = (tag) => {
+    //             if (currentEdit) { reject("Malformed output"); }
 
-            parser.ontext = (text) => {
-                if (!currentEdit) { return; }
+    //             switch (tag.name) {
+    //                 case "replacements":
+    //                     return;
 
-                currentEdit.text = text;
-            }
+    //                 case "replacement":
+    //                     currentEdit = {
+    //                         length: parseInt(tag.attributes['length'].toString()),
+    //                         offset: parseInt(tag.attributes['offset'].toString()),
+    //                         text: ''
+    //                     };
+    //                     break;
 
-            parser.onclosetag = (tagName) => {
-                if (!currentEdit) { return; }
+    //                 default:
+    //                     reject(`Unexpected tag ${tag.name}`);
+    //             }
 
-                var start = document.positionAt(currentEdit.offset);
-                var end = document.positionAt(currentEdit.offset + currentEdit.length);
 
-                var editRange = new vscode.Range(start, end);
+    //         };
 
-                edits.push(new vscode.TextEdit(editRange, currentEdit.text));
-                currentEdit = null;
-            }
+    //         parser.ontext = (text) => {
+    //             if (!currentEdit) { return; }
 
-            parser.onend = () => {
-                resolve(edits);
-            }
+    //             currentEdit.text = text;
+    //         }
 
-            parser.write(xml);
-            parser.end();
+    //         parser.onclosetag = (tagName) => {
+    //             if (!currentEdit) { return; }
 
-        });
-    }
+    //             var start = document.positionAt(currentEdit.offset);
+    //             var end = document.positionAt(currentEdit.offset + currentEdit.length);
+
+    //             var editRange = new vscode.Range(start, end);
+
+    //             edits.push(new vscode.TextEdit(editRange, currentEdit.text));
+    //             currentEdit = null;
+    //         }
+
+    //         parser.onend = () => {
+    //             resolve(edits);
+    //         }
+
+    //         parser.write(xml);
+    //         parser.end();
+
+    //     });
+    // }
 
     /// Get execute name in clang-format.executable, if not found, use default value
     /// If configure has changed, it will get the new value

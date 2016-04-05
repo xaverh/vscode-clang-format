@@ -8,6 +8,6 @@
 	],
 	"devDependencies": {},
 	"ambientDependencies": {
-		"sax": "registry:dt/sax#0.0.0+20160225202428"
+		"diff-match-patch": "registry:dt/diff-match-patch#1.0.0+20160316155526"
 	}
 }
