@@ -8,13 +8,41 @@ import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
 // import sax = require('sax');
 
+let EDIT_DELETE = 0;
+let EDIT_INSERT = 1;
+let EDIT_REPLACE = 2;
+
+class Edit {
+    action: number;
+    start: vscode.Position;
+    end: vscode.Position;
+    text: string;
+
+    constructor(action: number, start: vscode.Position) {
+        this.action = action;
+        this.start = start;
+        this.text = '';
+    }
+
+    apply(): vscode.TextEdit {
+        switch (this.action) {
+            case EDIT_INSERT:
+                return vscode.TextEdit.insert(this.start, this.text);
+            case EDIT_DELETE:
+                return vscode.TextEdit.delete(new vscode.Range(this.start, this.end));
+            case EDIT_REPLACE:
+                return vscode.TextEdit.replace(new vscode.Range(this.start, this.end), this.text);
+        }
+    }
+}
+
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
     private defaultConfigure = {
         executable: 'clang-format',
         style: 'file',
         fallbackStyle: 'none'
     };
-    
+
     public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return this.doFormatDocument(document, null, options, token);
     }
@@ -93,10 +121,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         if (execPath) {
             return execPath;
         }
-        
+
         return this.defaultConfigure.executable;
     }
-    
+
     private getStyle() {
         let ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
         if (ret.trim()) {
@@ -104,24 +132,24 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         } else {
             ret = this.defaultConfigure.style;
         }
-        
+
         // Custom style
         if (ret.match(/[\\\{\" ]/)) {
             return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
         }
-        
+
         return ret;
-    }  
-    
+    }
+
     private getFallbackStyle() {
         let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
         if (strConf.trim()) {
             return strConf;
         }
-        
+
         return this.defaultConfigure.style;
     }
-    
+
     private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
@@ -159,7 +187,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             }
 
             var workingPath = vscode.workspace.rootPath;;
-            if(!document.isUntitled) {
+            if (!document.isUntitled) {
                 workingPath = path.dirname(document.fileName);
             }
 
