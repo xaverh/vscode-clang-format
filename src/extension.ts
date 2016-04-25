@@ -4,6 +4,7 @@ import path = require('path');
 import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
+import buffer = require('buffer')
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
     private defaultConfigure = {
@@ -40,7 +41,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.doFormatDocument(document, range, options, token);
     }
 
-    private getEdits(document: vscode.TextDocument, xml: string): Thenable<vscode.TextEdit[]> {
+    private getEdits(document: vscode.TextDocument, xml: string, codeContent: string): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var options = { trim: false, normalize: false, loose: true }
             var parser = sax.parser(true, options);
@@ -48,6 +49,31 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var edits: vscode.TextEdit[] = [];
             var currentEdit: { length: number, offset: number, text: string };
 
+            var codeBuffer = new buffer.Buffer(codeContent);
+            // encoding position cache
+            var codeByteOffsetCache = {
+                byte: 0,
+                offset: 0
+            };
+            var byteToOffset = function(editInfo: { length: number, offset: number }) {
+                var offset = editInfo.offset;
+                var length = editInfo.length;
+                
+                if (offset >= codeByteOffsetCache.byte) {
+                    editInfo.offset = codeByteOffsetCache.offset + codeBuffer.slice(codeByteOffsetCache.byte, offset).toString('utf8').length;
+                    codeByteOffsetCache.byte = offset;
+                    codeByteOffsetCache.offset = editInfo.offset;
+                } else {
+                    editInfo.offset = codeBuffer.slice(0, offset).toString('utf8').length;
+                    codeByteOffsetCache.byte = offset;
+                    codeByteOffsetCache.offset = editInfo.offset;
+                }
+                
+                editInfo.length = codeBuffer.slice(offset, offset + length).toString('utf8').length;
+                
+                return editInfo;
+            };
+            
             parser.onerror = (err) => {
                 reject(err.message);
             };
@@ -66,6 +92,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                             offset: parseInt(tag.attributes['offset'].toString()),
                             text: ''
                         };
+                        byteToOffset(currentEdit);
                         break;
 
                     default:
@@ -123,9 +150,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
         
         // Custom style
-        if (ret.match(/[\\\{\" ]/)) {
-            return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
-        }
+        // if (ret.match(/[\\\{\" ]/)) {
+        //     return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
+        // }
         
         return ret;
     }  
@@ -144,6 +171,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var filename = document.fileName;
 
             var formatCommandBinPath = getBinPath(this.getExecutableName());
+            var codeContent = document.getText();
 
             var childCompleted = (err, stdout, stderr) => {
                 try {
@@ -157,7 +185,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                         debugger;
                         return value;
                     };
-                    return resolve(this.getEdits(document, stdout));
+                    return resolve(this.getEdits(document, stdout, codeContent));
 
                 } catch (e) {
                     reject(e);
@@ -172,6 +200,11 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 var offset = document.offsetAt(range.start);
                 var length = document.offsetAt(range.end) - offset;
 
+                // fix charater length to byte length
+                length = buffer.Buffer.byteLength(codeContent.substr(offset, length), 'utf8');
+                // fix charater offset to byte offset
+                offset = buffer.Buffer.byteLength(codeContent.substr(0, offset), 'utf8');
+                
                 formatArgs.push(`-offset=${offset}`, `-length=${length}`)
             }
 
@@ -181,7 +214,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             }
 
             var child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
-            child.stdin.end(document.getText());
+            child.stdin.end(codeContent);
 
             token.onCancellationRequested(() => {
                 child.kill();

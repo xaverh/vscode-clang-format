@@ -8,7 +8,8 @@
         "vscode": "^0.10.10"
     },
     "dependencies": {
-        "sax" : "^1.1.5"
+        "sax" : "^1.1.5",
+        "buffer": "^4.6.0"
     },
     "categories": [
         "Other"
