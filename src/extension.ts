@@ -4,7 +4,6 @@ import path = require('path');
 import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
-import buffer = require('buffer')
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
     private defaultConfigure = {
@@ -29,7 +28,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var edits: vscode.TextEdit[] = [];
             var currentEdit: { length: number, offset: number, text: string };
 
-            var codeBuffer = new buffer.Buffer(codeContent);
+            var codeBuffer = new Buffer(codeContent);
             // encoding position cache
             var codeByteOffsetCache = {
                 byte: 0,
@@ -181,9 +180,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 var length = document.offsetAt(range.end) - offset;
 
                 // fix charater length to byte length
-                length = buffer.Buffer.byteLength(codeContent.substr(offset, length), 'utf8');
+                length = Buffer.byteLength(codeContent.substr(offset, length), 'utf8');
                 // fix charater offset to byte offset
-                offset = buffer.Buffer.byteLength(codeContent.substr(0, offset), 'utf8');
+                offset = Buffer.byteLength(codeContent.substr(0, offset), 'utf8');
                 
                 formatArgs.push(`-offset=${offset}`, `-length=${length}`)
             }
