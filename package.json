@@ -2,10 +2,10 @@
     "name": "clang-format",
     "displayName": "Clang-Format",
     "description": "Use Clang-Format in Visual Studio Code",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "publisher": "xaver",
     "engines": {
-        "vscode": "^0.10.10"
+        "vscode": "^1.0.0"
     },
     "dependencies": {
         "sax" : "^1.1.5"
@@ -42,7 +42,7 @@
 				},
                 "clang-format.fallbackStyle": {
 					"type": "string",
-					"default": "none",
+					"default": "LLVM",
 					"description": "clang-format fallback style.(-fallback-style=value, value can be none, LLVM, Google, Chromium, Mozilla, WebKit)"
 				}
             }
