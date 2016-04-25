@@ -2,6 +2,12 @@
 
 ## Release history
 
+### v 0.6.0
+* fixed multibyte character handling #7 (by [OWenT](https://github.com/owt5008137))
+* fixed "clang-format is ignoring the -style setting because of invalid value" #6 (by [OWenT](https://github.com/owt5008137))
+* LLVM style is now the default fallback style (fixes #1)
+* changed dependency to VS Code 1.0.0 or higher
+
 ### v 0.5.0
 * Included [OWenT](https://github.com/owt5008137)'s changes:
   1. add setting of clang-format executable
