@@ -150,9 +150,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
         
         // Custom style
-        if (ret.match(/[\\\{\" ]/)) {
-            return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
-        }
+        // if (ret.match(/[\\\{\" ]/)) {
+        //     return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
+        // }
         
         return ret;
     }  
