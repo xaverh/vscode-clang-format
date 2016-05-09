@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
+import {MODES} from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
 
@@ -210,7 +210,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
 
     var formatter = new ClangDocumentFormattingEditProvider();
 
-    [C_MODE, CPP_MODE, JAVA_MODE, OBJECTIVE_C_MODE].forEach(mode => {
+    MODES.forEach(mode => {
         ctx.subscriptions.push(vscode.languages.registerDocumentRangeFormattingEditProvider(mode, formatter));
         ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(mode, formatter));
     })
