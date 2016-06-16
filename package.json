@@ -54,8 +54,8 @@
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "devDependencies": {
-        "typescript": "^1.6.2",
-        "vscode": "0.10.x"
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0"
     },
     "icon": "clang-format.png",
     "repository": {
