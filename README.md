@@ -2,6 +2,9 @@
 
 ## Release history
 
+### v 0.6.1
+* clean up dependencies #9
+
 ### v 0.6.0
 * fixed multibyte character handling #7 (by [OWenT](https://github.com/owt5008137))
 * fixed "clang-format is ignoring the -style setting because of invalid value" #6 (by [OWenT](https://github.com/owt5008137))
