@@ -18,7 +18,9 @@
         "onLanguage:cpp",
         "onLanguage:c",
         "onLanguage:objective-c",
-        "onLanguage:java"
+        "onLanguage:java",
+        "onLanguage:javascript",
+        "onLanguage:typescript"
     ],
     "contributes": {
         "configuration": {
