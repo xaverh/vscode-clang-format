@@ -171,9 +171,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 }
             };
 
-            var formatArgs = ['-output-replacements-xml'];
-            formatArgs.push(`-style=${this.getStyle()}`);
-            formatArgs.push(`-fallback-style=${this.getFallbackStyle()}`);
+            var formatArgs = [
+                '-output-replacements-xml',
+                `-style=${this.getStyle()}`,
+                `-fallback-style=${this.getFallbackStyle()}`,
+                `-assume-filename=${document.fileName}`,
+            ];
 
             if (range) {
                 var offset = document.offsetAt(range.start);
