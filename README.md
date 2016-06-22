@@ -2,6 +2,11 @@
 
 ## Release history
 
+### CURRENT
+* add protobuf support(work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
+* add javascript/typescript support
+* allow different style & fallback style option for different languages
+
 ### v 0.6.1
 * clean up dependencies #9
 

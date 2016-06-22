@@ -120,24 +120,27 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.defaultConfigure.executable;
     }
     
-    private getStyle() {
-        let ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+    private getStyle(document: vscode.TextDocument) {
+        let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.style`);
         if (ret.trim()) {
-            ret = ret.trim();
-        } else {
-            ret = this.defaultConfigure.style;
+            return ret.trim();
         }
-        
-        // Custom style
-        // if (ret.match(/[\\\{\" ]/)) {
-        //     return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
-        // }
-        
-        return ret;
+
+        ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+        if (ret && ret.trim()) {
+            return ret.trim();
+        } else {
+            return this.defaultConfigure.style;
+        }
     }  
     
-    private getFallbackStyle() {
-        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
+    private getFallbackStyle(document: vscode.TextDocument) {
+        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.fallbackStyle`);
+        if (strConf.trim()) {
+            return strConf;
+        }
+
+        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
         if (strConf.trim()) {
             return strConf;
         }
@@ -173,8 +176,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
             var formatArgs = [
                 '-output-replacements-xml',
-                `-style=${this.getStyle()}`,
-                `-fallback-style=${this.getFallbackStyle()}`,
+                `-style=${this.getStyle(document)}`,
+                `-fallback-style=${this.getFallbackStyle(document)}`,
                 `-assume-filename=${document.fileName}`,
             ];
 
