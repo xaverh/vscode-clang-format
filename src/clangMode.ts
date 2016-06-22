@@ -2,7 +2,5 @@
 
 import vscode = require('vscode');
 
-export const CPP_MODE: vscode.DocumentFilter = { language: 'cpp', scheme: 'file' }
-export const C_MODE: vscode.DocumentFilter = { language: 'c', scheme: 'file' }
-export const OBJECTIVE_C_MODE: vscode.DocumentFilter = { language: 'objective-c', scheme: 'file' }
-export const JAVA_MODE: vscode.DocumentFilter = { language: 'java', scheme: 'file' }
+const LANGUAGES: string[] = ['cpp', 'c', 'objective-c', 'java', 'javascript', 'typescript', 'proto'];
+export const MODES: vscode.DocumentFilter[] = LANGUAGES.map(language => ({ language, scheme: 'file' }));

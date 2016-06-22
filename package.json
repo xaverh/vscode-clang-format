@@ -18,7 +18,10 @@
         "onLanguage:cpp",
         "onLanguage:c",
         "onLanguage:objective-c",
-        "onLanguage:java"
+        "onLanguage:java",
+        "onLanguage:javascript",
+        "onLanguage:typescript",
+        "onLanguage:proto"
     ],
     "contributes": {
         "configuration": {
@@ -35,15 +38,88 @@
 					"default": "clang-format",
 					"description": "clang-format executable path"
 				},
+                // style
                 "clang-format.style": {
 					"type": "string",
 					"default": "file",
 					"description": "clang-format style.(-style=value, value can be file, LLVM, Google, Chromium, Mozilla, WebKit or json configure)"
 				},
+                // fallback style
                 "clang-format.fallbackStyle": {
 					"type": "string",
 					"default": "LLVM",
 					"description": "clang-format fallback style.(-fallback-style=value, value can be none, LLVM, Google, Chromium, Mozilla, WebKit)"
+				},
+                // every language can has it's own style & fallback style option, if not confirured, use the default value above
+                "clang-format.language.cpp.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for c++, left empty to use clang-format.style"
+				},
+                "clang-format.language.cpp.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for c++, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.c.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for c, left empty to use clang-format.style"
+				},
+                "clang-format.language.c.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for c, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.objective-c.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for objective-c, left empty to use clang-format.style"
+				},
+                "clang-format.language.objective-c.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for objective-c, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.java.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for java, left empty to use clang-format.style"
+				},
+                "clang-format.language.java.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for java, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.javascript.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for javascript, left empty to use clang-format.style"
+				},
+                "clang-format.language.javascript.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for javascript, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.typescript.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for typescript, left empty to use clang-format.style"
+				},
+                "clang-format.language.typescript.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for typescript, left empty to use clang-format.fallbackStyle"
+				},
+                "clang-format.language.proto.style": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for proto, left empty to use clang-format.style"
+				},
+                "clang-format.language.proto.fallbackStyle": {
+					"type": "string",
+					"default": "",
+					"description": "clang-format fallback style for proto, left empty to use clang-format.fallbackStyle"
 				}
             }
         }
@@ -54,8 +130,8 @@
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "devDependencies": {
-        "typescript": "^1.6.2",
-        "vscode": "0.10.x"
+        "typescript": "^1.8.5",
+        "vscode": "^0.11.0"
     },
     "icon": "clang-format.png",
     "repository": {

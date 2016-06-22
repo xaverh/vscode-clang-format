@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import {C_MODE, CPP_MODE, OBJECTIVE_C_MODE, JAVA_MODE} from './clangMode';
+import {MODES} from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
 
@@ -59,7 +59,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
 
             parser.onopentag = (tag) => {
-                if (currentEdit) { reject("Malformed output"); }
+                if (currentEdit) { 
+                    reject("Malformed output"); 
+                }
 
                 switch (tag.name) {
                     case "replacements":
@@ -120,24 +122,27 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.defaultConfigure.executable;
     }
     
-    private getStyle() {
-        let ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+    private getStyle(document: vscode.TextDocument) {
+        let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.style`);
         if (ret.trim()) {
-            ret = ret.trim();
-        } else {
-            ret = this.defaultConfigure.style;
+            return ret.trim();
         }
-        
-        // Custom style
-        // if (ret.match(/[\\\{\" ]/)) {
-        //     return `"${ret.replace(/([\\\"])/g, "\\$1")}"`
-        // }
-        
-        return ret;
+
+        ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+        if (ret && ret.trim()) {
+            return ret.trim();
+        } else {
+            return this.defaultConfigure.style;
+        }
     }  
     
-    private getFallbackStyle() {
-        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
+    private getFallbackStyle(document: vscode.TextDocument) {
+        let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.fallbackStyle`);
+        if (strConf.trim()) {
+            return strConf;
+        }
+
+        strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
         if (strConf.trim()) {
             return strConf;
         }
@@ -158,7 +163,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                         vscode.window.showInformationMessage("The '" + formatCommandBinPath + "' command is not available.  Please check your clang.formatTool user setting and ensure it is installed.");
                         return resolve(null);
                     }
-                    if (err) return reject("Cannot format due to syntax errors.");
+                    if (err) {
+                        return reject("Cannot format due to syntax errors.");
+                    }
 
                     var dummyProcessor = (value: string) => {
                         debugger;
@@ -171,9 +178,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 }
             };
 
-            var formatArgs = ['-output-replacements-xml'];
-            formatArgs.push(`-style=${this.getStyle()}`);
-            formatArgs.push(`-fallback-style=${this.getFallbackStyle()}`);
+            var formatArgs = [
+                '-output-replacements-xml',
+                `-style=${this.getStyle(document)}`,
+                `-fallback-style=${this.getFallbackStyle(document)}`,
+                `-assume-filename=${document.fileName}`,
+            ];
 
             if (range) {
                 var offset = document.offsetAt(range.start);
@@ -195,11 +205,17 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
             child.stdin.end(codeContent);
 
-            token.onCancellationRequested(() => {
-                child.kill();
-                reject("Cancelation requested");
-            });
+            if(token) {
+                token.onCancellationRequested(() => {
+                    child.kill();
+                    reject("Cancelation requested");
+                });
+            }
         });
+    }
+
+    public formatDocument(document: vscode.TextDocument): Thenable<vscode.TextEdit[]>{
+        return this.doFormatDocument(document, null, null, null);
     }
 
 }
@@ -209,9 +225,49 @@ let diagnosticCollection: vscode.DiagnosticCollection;
 export function activate(ctx: vscode.ExtensionContext): void {
 
     var formatter = new ClangDocumentFormattingEditProvider();
+    var availableLanguages = {};
 
-    [C_MODE, CPP_MODE, JAVA_MODE, OBJECTIVE_C_MODE].forEach(mode => {
+    MODES.forEach(mode => {
         ctx.subscriptions.push(vscode.languages.registerDocumentRangeFormattingEditProvider(mode, formatter));
         ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(mode, formatter));
-    })
+        availableLanguages[mode.language] = true;
+    });
+
+    // TODO: This is really ugly.  I'm not sure we can do better until
+    // Code supports a pre-save event where we can do the formatting before
+    // the file is written to disk.	
+    // @see https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts
+    let ignoreNextSave = new WeakSet<vscode.TextDocument>();
+
+    vscode.workspace.onDidSaveTextDocument(document => {
+        try {
+            let formatOnSave = vscode.workspace.getConfiguration('clang-format').get<boolean>('formatOnSave');
+            if (!formatOnSave) {
+                return;
+            }
+
+            if (!availableLanguages[document.languageId] || ignoreNextSave.has(document)) {
+                return;
+            }
+
+            let textEditor = vscode.window.activeTextEditor;
+            formatter.formatDocument(document).then(edits => {
+                return textEditor.edit(editBuilder => {
+                    edits.forEach(edit => editBuilder.replace(edit.range, edit.newText))
+                });
+            }).then(applied => {
+                ignoreNextSave.add(document);
+                return document.save();
+            }).then(
+                () => {
+                    ignoreNextSave.delete(document);
+                }, () => {
+                    // Catch any errors and ignore so that we still trigger 
+                    // the file save.
+                }
+            );
+        } catch(e) {
+            console.error('formate when save file failed.' + e.toString());
+        }
+    });
 }
