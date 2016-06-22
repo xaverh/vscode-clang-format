@@ -2,6 +2,12 @@
 
 ## Release history
 
+### DEVELOPING
+* add protobuf support(work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
+* add javascript/typescript support
+* allow different style & fallback style option for different languages
+* format on save is available now(just like https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts)
+
 ### v 0.6.1
 * clean up dependencies #9
 
