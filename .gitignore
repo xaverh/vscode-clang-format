@@ -6,3 +6,4 @@ typings/browser
 typings/main.d.ts
 typings/browser.d.ts
 npm-debug.log
+.vscode/**
