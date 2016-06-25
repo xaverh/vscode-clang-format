@@ -2,11 +2,11 @@
 
 ## Release history
 
-### DEVELOPING
-* add protobuf support(work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
+### v 0.9.0
+* add protobuf support (work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
 * add javascript/typescript support
 * allow different style & fallback style option for different languages
-* format on save is available now(just like https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts)
+* format on save is available now (just like https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts)
 
 ### v 0.6.1
 * clean up dependencies #9
@@ -34,5 +34,4 @@
 If clang-format is installed and in PATH, C/C++ etc source files can be formatted with Visual Studio Code's built-in formatter (Usually: Ctrl+Shift+F).
 
 ## Source code
-
 Available on github: https://github.com/xaverh/vscode-clang-format-provider
