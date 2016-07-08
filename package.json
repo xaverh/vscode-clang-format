@@ -15,16 +15,11 @@
         "Languages"
     ],
     "keywords": [
-        "Tools",
         "C++",
-        "C",
         "JavaScript",
-        "Protobuf",
-        "Java",
         "Objective-C",
         "Clang",
-        "LLVM",
-        "Clang-Format"
+        "LLVM"
     ],
     "main": "./out/src/extension",
     "activationEvents": [
