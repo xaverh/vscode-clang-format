@@ -2,5 +2,11 @@
 
 import vscode = require('vscode');
 
-const LANGUAGES: string[] = ['cpp', 'c', 'objective-c', 'java', 'javascript', 'typescript', 'proto'];
-export const MODES: vscode.DocumentFilter[] = LANGUAGES.map(language => ({ language, scheme: 'file' }));
+let languages: string[] = [];
+for (var l of ["cpp", "c", "objective-c", "java", "javascript", "typescript", "proto"]) {
+	if (vscode.workspace.getConfiguration("clang-format").get("language." + l + ".enable")) {
+		languages.push(l);
+	}
+}
+
+export const MODES: vscode.DocumentFilter[] = languages.map(language => ({ language, scheme: 'file' }));
