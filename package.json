@@ -59,7 +59,7 @@
                 "clang-format.language.cpp.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for C++"
+                    "description": "enable formatting for C++ (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.cpp.style": {
                     "type": "string",
@@ -74,7 +74,7 @@
                 "clang-format.language.c.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for C"
+                    "description": "enable formatting for C (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.c.style": {
                     "type": "string",
@@ -89,7 +89,7 @@
                 "clang-format.language.objective-c.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for Objective-C"
+                    "description": "enable formatting for Objective-C (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.objective-c.style": {
                     "type": "string",
@@ -104,7 +104,7 @@
                 "clang-format.language.java.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for Java"
+                    "description": "enable formatting for Java (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.java.style": {
                     "type": "string",
@@ -119,7 +119,7 @@
                 "clang-format.language.javascript.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for JavaScript"
+                    "description": "enable formatting for JavaScript (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.javascript.style": {
                     "type": "string",
@@ -134,7 +134,7 @@
                 "clang-format.language.typescript.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for TypeScript"
+                    "description": "enable formatting for TypeScript (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.typescript.style": {
                     "type": "string",
@@ -149,7 +149,7 @@
                 "clang-format.language.proto.enable": {
                     "type": "boolean",
                     "default": true,
-                    "description": "enable formatting for Protobuf"
+                    "description": "enable formatting for Protobuf (requires reloading Visual Studio Code)"
                 },
                 "clang-format.language.proto.style": {
                     "type": "string",
