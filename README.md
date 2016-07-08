@@ -3,7 +3,7 @@
 ## Release history
 
 ### v 0.10.0
-* enabling of individual languages with ```clang-format.language.javascript.enable```, etc.
+* enabling of individual languages with ```clang-format.language.javascript.enable```, etc.*—requires reloading Visual Studio Code*
 
 ### v 0.9.0
 * add protobuf support (work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
