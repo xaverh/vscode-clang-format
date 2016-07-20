@@ -2,7 +2,7 @@
     "name": "clang-format",
     "displayName": "Clang-Format",
     "description": "Use Clang-Format in Visual Studio Code",
-    "version": "0.10.1",
+    "version": "0.10.2",
     "publisher": "xaver",
     "engines": {
         "vscode": "^1.0.0"
@@ -128,8 +128,8 @@
                 },
                 "clang-format.language.javascript.fallbackStyle": {
                     "type": "string",
-                    "default": "",
-                    "description": "clang-format fallback style for JavaScript, left empty to use clang-format.fallbackStyle"
+                    "default": "google",
+                    "description": "clang-format fallback style for JavaScript"
                 },
                 "clang-format.language.typescript.enable": {
                     "type": "boolean",
@@ -143,8 +143,8 @@
                 },
                 "clang-format.language.typescript.fallbackStyle": {
                     "type": "string",
-                    "default": "",
-                    "description": "clang-format fallback style for TypeScript, left empty to use clang-format.fallbackStyle"
+                    "default": "google",
+                    "description": "clang-format fallback style for TypeScript"
                 },
                 "clang-format.language.proto.enable": {
                     "type": "boolean",
