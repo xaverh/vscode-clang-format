@@ -2,6 +2,12 @@
 
 ## Release history
 
+### v 0.10.2
+* fix info message for when executable is not found (by [prideout](https://github.com/prideout))
+
+### v 0.10.1
+* minor fixes
+
 ### v 0.10.0
 * enabling of individual languages with ```clang-format.language.javascript.enable```, etc.*—requires reloading Visual Studio Code*
 
