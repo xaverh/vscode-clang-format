@@ -160,7 +160,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var childCompleted = (err, stdout, stderr) => {
                 try {
                     if (err && (<any>err).code == "ENOENT") {
-                        vscode.window.showInformationMessage("The '" + formatCommandBinPath + "' command is not available.  Please check your clang.formatTool user setting and ensure it is installed.");
+                        vscode.window.showInformationMessage("The '" + formatCommandBinPath + "' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.");
                         return resolve(null);
                     }
                     if (err) {
