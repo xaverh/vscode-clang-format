@@ -2,8 +2,11 @@
 
 ## Release history
 
-### v 0.10.2
+### v 0.10.3
 * fix info message for when executable is not found (by [prideout](https://github.com/prideout))
+
+### v 0.10.2
+* Marketplace appearance
 
 ### v 0.10.1
 * minor fixes
