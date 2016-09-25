@@ -267,7 +267,7 @@ export function activate(ctx: vscode.ExtensionContext): void {
                 }
             );
         } catch(e) {
-            console.error('formate when save file failed.' + e.toString());
+            console.error('"format on save" failed' + e.toString());
         }
     });
 }
