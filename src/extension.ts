@@ -11,7 +11,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         style: 'file',
         fallbackStyle: 'none'
     };
-    
+
     public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return this.doFormatDocument(document, null, options, token);
     }
@@ -37,7 +37,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             var byteToOffset = function(editInfo: { length: number, offset: number }) {
                 var offset = editInfo.offset;
                 var length = editInfo.length;
-                
+
                 if (offset >= codeByteOffsetCache.byte) {
                     editInfo.offset = codeByteOffsetCache.offset + codeBuffer.slice(codeByteOffsetCache.byte, offset).toString('utf8').length;
                     codeByteOffsetCache.byte = offset;
@@ -47,20 +47,20 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                     codeByteOffsetCache.byte = offset;
                     codeByteOffsetCache.offset = editInfo.offset;
                 }
-                
+
                 editInfo.length = codeBuffer.slice(offset, offset + length).toString('utf8').length;
-                
+
                 return editInfo;
             };
-            
+
             parser.onerror = (err) => {
                 reject(err.message);
             };
 
 
             parser.onopentag = (tag) => {
-                if (currentEdit) { 
-                    reject("Malformed output"); 
+                if (currentEdit) {
+                    reject("Malformed output");
                 }
 
                 switch (tag.name) {
@@ -118,10 +118,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         if (execPath) {
             return execPath;
         }
-        
+
         return this.defaultConfigure.executable;
     }
-    
+
     private getStyle(document: vscode.TextDocument) {
         let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.style`);
         if (ret.trim()) {
@@ -134,8 +134,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         } else {
             return this.defaultConfigure.style;
         }
-    }  
-    
+    }
+
     private getFallbackStyle(document: vscode.TextDocument) {
         let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.fallbackStyle`);
         if (strConf.trim()) {
@@ -146,10 +146,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         if (strConf.trim()) {
             return strConf;
         }
-        
+
         return this.defaultConfigure.style;
     }
-    
+
     private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
@@ -193,7 +193,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 length = Buffer.byteLength(codeContent.substr(offset, length), 'utf8');
                 // fix charater offset to byte offset
                 offset = Buffer.byteLength(codeContent.substr(0, offset), 'utf8');
-                
+
                 formatArgs.push(`-offset=${offset}`, `-length=${length}`)
             }
 
@@ -231,43 +231,5 @@ export function activate(ctx: vscode.ExtensionContext): void {
         ctx.subscriptions.push(vscode.languages.registerDocumentRangeFormattingEditProvider(mode, formatter));
         ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(mode, formatter));
         availableLanguages[mode.language] = true;
-    });
-
-    // TODO: This is really ugly.  I'm not sure we can do better until
-    // Code supports a pre-save event where we can do the formatting before
-    // the file is written to disk.	
-    // @see https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts
-    let ignoreNextSave = new WeakSet<vscode.TextDocument>();
-
-    vscode.workspace.onDidSaveTextDocument(document => {
-        try {
-            let formatOnSave = vscode.workspace.getConfiguration('clang-format').get<boolean>('formatOnSave');
-            if (!formatOnSave) {
-                return;
-            }
-
-            if (!availableLanguages[document.languageId] || ignoreNextSave.has(document)) {
-                return;
-            }
-
-            let textEditor = vscode.window.activeTextEditor;
-            formatter.formatDocument(document).then(edits => {
-                return textEditor.edit(editBuilder => {
-                    edits.forEach(edit => editBuilder.replace(edit.range, edit.newText))
-                });
-            }).then(applied => {
-                ignoreNextSave.add(document);
-                return document.save();
-            }).then(
-                () => {
-                    ignoreNextSave.delete(document);
-                }, () => {
-                    // Catch any errors and ignore so that we still trigger 
-                    // the file save.
-                }
-            );
-        } catch(e) {
-            console.error('"format on save" failed' + e.toString());
-        }
     });
 }

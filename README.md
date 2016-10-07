@@ -2,6 +2,9 @@
 
 ## Release history
 
+### v 0.11.0
+* this extension no longer provides its own formatOnSave feature since Visual Studio Code ^1.6.0 provides this out of the box. In order to still use *format on save* you have to put ```"editor.formatOnSave": true``` in your ```settings.json```
+
 ### v 0.10.3
 * fix info message for when executable is not found (by [prideout](https://github.com/prideout))
 

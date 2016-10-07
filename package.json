@@ -2,10 +2,10 @@
     "name": "clang-format",
     "displayName": "Clang-Format",
     "description": "Use Clang-Format in Visual Studio Code",
-    "version": "0.10.3",
+    "version": "0.11.0",
     "publisher": "xaver",
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.6.0"
     },
     "galleryBanner": {
         "color": "#4183c4",
@@ -40,11 +40,6 @@
             "type": "object",
             "title": "Clang-Format configuration",
             "properties": {
-                "clang-format.formatOnSave": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Run 'clang-format' on save."
-                },
                 "clang-format.executable": {
                     "type": "string",
                     "default": "clang-format",
