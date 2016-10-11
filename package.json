@@ -171,7 +171,9 @@
     "devDependencies": {
         "typescript": "^2.0.3",
         "vscode": "^1.0.0",
-        "@types/node": "^6.0.40"
+        "@types/node": "^6.0.40",
+        "@types/sax": "^1.1.5",
+        "@types/vscode": "^1.0.0"
     },
     "icon": "clang-format.png",
     "repository": {
