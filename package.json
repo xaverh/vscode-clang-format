@@ -16,7 +16,8 @@
     },
     "categories": [
         "Other",
-        "Languages"
+        "Languages",
+        "Formatters"
     ],
     "keywords": [
         "C++",
