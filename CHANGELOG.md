@@ -1,4 +1,4 @@
-* v 0.11.1
+* v 0.11.2
   * remove changelog from readme
   * change Marketplace category to "Formatter"
 * v 0.11.0
@@ -30,4 +30,4 @@
   3. add fallback style setting
 * v 0.1.2
   * Included [ioachim](https://github.com/ioachim/)'s changes:
-    > it doesn't require saving the file, works by doing partial edits (instead of replacing the whole buffer), and enables range formatting.
+> it doesn't require saving the file, works by doing partial edits (instead of replacing the whole buffer), and enables range formatting.
