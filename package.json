@@ -2,7 +2,7 @@
     "name": "clang-format",
     "displayName": "Clang-Format",
     "description": "Use Clang-Format in Visual Studio Code",
-    "version": "0.11.0",
+    "version": "0.11.1",
     "publisher": "xaver",
     "engines": {
         "vscode": "^1.0.0"
@@ -15,8 +15,6 @@
         "sax": "^1.1.5"
     },
     "categories": [
-        "Other",
-        "Languages",
         "Formatters"
     ],
     "keywords": [
@@ -172,9 +170,7 @@
     "devDependencies": {
         "typescript": "^2.0.3",
         "vscode": "^1.0.0",
-        "@types/node": "^6.0.40",
-        "@types/sax": "^1.1.5",
-        "@types/vscode": "^1.0.0"
+        "@types/node": "^6.0.40"
     },
     "icon": "clang-format.png",
     "repository": {
