@@ -113,13 +113,19 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
     /// Get execute name in clang-format.executable, if not found, use default value
     /// If configure has changed, it will get the new value
-    private getExecutableName() {
+    private getExecutablePath() {
         let execPath = vscode.workspace.getConfiguration('clang-format').get<string>('executable');
-        if (execPath) {
-            return execPath;
+        if (!execPath) {
+            return this.defaultConfigure.executable;
         }
 
-        return this.defaultConfigure.executable;
+        // replace placeholders, if present
+        return execPath
+                .replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
+                .replace(/\${cwd}/g, process.cwd())
+                .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
+                    return process.env[envName];
+                });
     }
 
     private getStyle(document: vscode.TextDocument) {
@@ -154,7 +160,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
 
-            var formatCommandBinPath = getBinPath(this.getExecutableName());
+            var formatCommandBinPath = getBinPath(this.getExecutablePath());
             var codeContent = document.getText();
 
             var childCompleted = (err, stdout, stderr) => {
