@@ -1,3 +1,5 @@
+* v 1.0.0
+  * ```clang-format.executable``` setting to choose clang-format binary (by [iainmcgin](https://github.com/iainmcgin))
 * v 0.11.2
   * remove changelog from readme
   * change Marketplace category to "Formatter"
