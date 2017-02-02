@@ -6,23 +6,23 @@ import path = require('path');
 var binPathCache: { [bin: string]: string; } = {}
 
 export function getBinPath(binname: string) {
-	binname = correctBinname(binname);
-    
 	if (binPathCache[binname]) return binPathCache[binname];
 
-    // clang-format.executable has a valid absolute path
-    if (fs.existsSync(binname)) {
-        binPathCache[binname] = binname;
-        return binname;
-    }
-    
-	if (process.env["PATH"]) {
-		var pathparts = process.env["PATH"].split(path.delimiter);
-		for (var i = 0; i < pathparts.length; i++) {
-			let binpath = path.join(pathparts[i], binname);
-			if (fs.existsSync(binpath)) {
-				binPathCache[binname] = binpath;
-				return binpath;
+	for (let binNameToSearch of correctBinname(binname)) {
+		// clang-format.executable has a valid absolute path
+		if (fs.existsSync(binNameToSearch)) {
+			binPathCache[binname] = binNameToSearch;
+			return binNameToSearch;
+		}
+
+		if (process.env["PATH"]) {
+			var pathparts = process.env["PATH"].split(path.delimiter);
+			for (var i = 0; i < pathparts.length; i++) {
+				let binpath = path.join(pathparts[i], binNameToSearch);
+				if (fs.existsSync(binpath)) {
+					binPathCache[binname] = binpath;
+					return binpath;
+				}
 			}
 		}
 	}
@@ -32,14 +32,10 @@ export function getBinPath(binname: string) {
 	return binname;
 }
 
-function correctBinname(binname: string) {
+function correctBinname(binname: string): [string] {
 	if (process.platform === 'win32') {
-        if(binname.substr(binname.length - 4).toLowerCase() !== '.exe') {
-		    return binname + ".exe";
-        } else {
-            return binname;
-        }
+        return [binname + '.exe', binname + '.cmd', binname];
     } else {
-		return binname
+		return [binname]
     }
 }
