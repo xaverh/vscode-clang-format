@@ -34,7 +34,7 @@ export function getBinPath(binname: string) {
 
 function correctBinname(binname: string): [string] {
 	if (process.platform === 'win32') {
-        return [binname + '.exe', binname + '.cmd', binname];
+        return [binname + '.exe', binname + '.bat', binname + '.cmd', binname];
     } else {
 		return [binname]
     }
