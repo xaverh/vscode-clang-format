@@ -1,4 +1,4 @@
-* v 1.0.6
+* v 1.1.1
   * Handling of clang-format binaries on Windows without .exe file-endings (by [Rizadh Nizam](https://github.com/rizadh))
 * v 1.0.0
   * ```clang-format.executable``` setting to choose clang-format binary (by [iainmcgin](https://github.com/iainmcgin))
