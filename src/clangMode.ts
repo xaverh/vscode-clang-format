@@ -3,7 +3,7 @@
 import vscode = require('vscode');
 
 let languages: string[] = [];
-for (var l of ["cpp", "c", "objective-c", "java", "javascript", "typescript", "proto"]) {
+for (var l of ["cpp", "c", "objective-c", "objective-cpp", "java", "javascript", "typescript", "proto"]) {
 	if (vscode.workspace.getConfiguration("clang-format").get("language." + l + ".enable")) {
 		languages.push(l);
 	}

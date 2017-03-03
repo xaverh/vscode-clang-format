@@ -29,6 +29,7 @@
         "onLanguage:cpp",
         "onLanguage:c",
         "onLanguage:objective-c",
+        "onLanguage:objective-cpp",
         "onLanguage:java",
         "onLanguage:javascript",
         "onLanguage:typescript",
@@ -98,6 +99,21 @@
                     "type": "string",
                     "default": "",
                     "description": "clang-format fallback style for Objective-C, left empty to use clang-format.fallbackStyle"
+                },
+                "clang-format.language.objective-cpp.enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "enable formatting for Objective-C++ (requires reloading Visual Studio Code)"
+                },
+                "clang-format.language.objective-cpp.style": {
+                    "type": "string",
+                    "default": "",
+                    "description": "clang-format fallback style for Objective-C++, left empty to use clang-format.style"
+                },
+                "clang-format.language.objective-cpp.fallbackStyle": {
+                    "type": "string",
+                    "default": "",
+                    "description": "clang-format fallback style for Objective-C++, left empty to use clang-format.fallbackStyle"
                 },
                 "clang-format.language.java.enable": {
                     "type": "boolean",
