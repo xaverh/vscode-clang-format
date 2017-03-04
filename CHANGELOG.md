@@ -1,3 +1,5 @@
+* v 1.2.1
+  * Extension works on Objective-C++ now (by [mjbvz](https://github.com/mjbvz))
 * v 1.1.1
   * Handling of clang-format binaries on Windows without .exe file-endings (by [Rizadh Nizam](https://github.com/rizadh))
 * v 1.0.0
