@@ -5,7 +5,7 @@
 
 ## Usage
 
-This extension allows clang-format to be used to format C/C++, Javascript etc. 
+This extension allows clang-format (version 3.6 or higher) to be used to format C/C++, Javascript etc.
 source files directly from within Visual Studio Code.
 
 Files can be formatted on-demand by right clicking in the document and
@@ -17,7 +17,6 @@ vscode settings.json file:
 
 ```json
 {
-    // ...
     "editor.formatOnSave": true
 }
 ```
@@ -30,19 +29,18 @@ settings.json file:
 
 ```json
 {
-    // ...
     "clang-format.executable": "/absolute/path/to/clang-format"
 }
 ```
 
-Placeholders can also be used in the `clang-format.executable` value. 
+Placeholders can also be used in the `clang-format.executable` value.
 The following placeholders are supported:
 
 - `${workspaceRoot}` - replaced by the absolute path of the current vscode
   workspace root.
 - `${cwd}` - replaced by the current working directory of vscode.
 - `${env.VAR}` - replaced by the environment variable $VAR, e.g. `${env.HOME}`
-  will be replaced by `$HOME`, your home directory. 
+  will be replaced by `$HOME`, your home directory.
 
 Some examples:
 
