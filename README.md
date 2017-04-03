@@ -10,7 +10,7 @@ source files directly from within Visual Studio Code.
 
 Files can be formatted on-demand by right clicking in the document and
 selecting "Format Document", or by using the associated keyboard shortcut
-(usually Ctrl+Shift+F on Windows/Linux, and Cmd+Shift+F on Mac).
+(usually Alt+Shift+F on Windows/Linux, and Cmd+Shift+F on Mac).
 
 To automatically format a file on save, add the following to your
 vscode settings.json file:
