@@ -9,7 +9,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     private defaultConfigure = {
         executable: 'clang-format',
         style: 'file',
-        fallbackStyle: 'none'
+        fallbackStyle: 'none',
+        assumeFilename: ''
     };
 
     public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
@@ -156,6 +157,14 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return this.defaultConfigure.style;
     }
 
+    private getAssumedFilename(document: vscode.TextDocument) {
+                let assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
+        if (assumedFilename === "") {
+            return document.fileName;
+        }
+        return assumedFilename;
+    }
+
     private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
         return new Promise((resolve, reject) => {
             var filename = document.fileName;
@@ -188,7 +197,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 '-output-replacements-xml',
                 `-style=${this.getStyle(document)}`,
                 `-fallback-style=${this.getFallbackStyle(document)}`,
-                `-assume-filename=${document.fileName}`,
+                `-assume-filename=${this.getAssumedFilename(document)}`,
             ];
 
             if (range) {

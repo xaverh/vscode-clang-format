@@ -174,6 +174,11 @@
                     "type": "string",
                     "default": "",
                     "description": "clang-format fallback style for Protobuf, left empty to use clang-format.fallbackStyle"
+                },
+                "clang-format.assumeFilename" : {
+                    "type": "string",
+                    "default": "",
+                    "description": "When reading from stdin, clang-format assumes this                               filename to look for a style config file (with -style=file) and to determine the language."
                 }
             }
         }
