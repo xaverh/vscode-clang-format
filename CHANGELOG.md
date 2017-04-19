@@ -3,7 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.3.0] - 2017-04-20
+### Added
+- ```-assume-filename=``` option configurable as ```clang-format.assumeFilename``` in user/workspace settings
 
 ## [1.2.1] - 2017-03-04
 ### Added

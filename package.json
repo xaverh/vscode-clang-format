@@ -2,7 +2,7 @@
     "name": "clang-format",
     "displayName": "Clang-Format",
     "description": "Use Clang-Format in Visual Studio Code",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "publisher": "xaver",
     "engines": {
         "vscode": "^1.0.0"
@@ -175,7 +175,7 @@
                     "default": "",
                     "description": "clang-format fallback style for Protobuf, left empty to use clang-format.fallbackStyle"
                 },
-                "clang-format.assumeFilename" : {
+                "clang-format.assumeFilename": {
                     "type": "string",
                     "default": "",
                     "description": "When reading from stdin, clang-format assumes this                               filename to look for a style config file (with -style=file) and to determine the language."
