@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import {MODES} from './clangMode';
+import { MODES } from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
 
@@ -35,7 +35,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 byte: 0,
                 offset: 0
             };
-            var byteToOffset = function(editInfo: { length: number, offset: number }) {
+            var byteToOffset = function (editInfo: { length: number, offset: number }) {
                 var offset = editInfo.offset;
                 var length = editInfo.length;
 
@@ -122,11 +122,11 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
         // replace placeholders, if present
         return execPath
-                .replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
-                .replace(/\${cwd}/g, process.cwd())
-                .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
-                    return process.env[envName];
-                });
+            .replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
+            .replace(/\${cwd}/g, process.cwd())
+            .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
+                return process.env[envName];
+            });
     }
 
     private getStyle(document: vscode.TextDocument) {
@@ -158,7 +158,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     }
 
     private getAssumedFilename(document: vscode.TextDocument) {
-                let assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
+        let assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
         if (assumedFilename === "") {
             return document.fileName;
         }
@@ -212,15 +212,15 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
                 formatArgs.push(`-offset=${offset}`, `-length=${length}`)
             }
 
-            var workingPath = vscode.workspace.rootPath;;
-            if(!document.isUntitled) {
+            var workingPath = vscode.workspace.rootPath;
+            if (!document.isUntitled) {
                 workingPath = path.dirname(document.fileName);
             }
 
             var child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
             child.stdin.end(codeContent);
 
-            if(token) {
+            if (token) {
                 token.onCancellationRequested(() => {
                     child.kill();
                     reject("Cancelation requested");
@@ -229,7 +229,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         });
     }
 
-    public formatDocument(document: vscode.TextDocument): Thenable<vscode.TextEdit[]>{
+    public formatDocument(document: vscode.TextDocument): Thenable<vscode.TextEdit[]> {
         return this.doFormatDocument(document, null, null, null);
     }
 
