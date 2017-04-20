@@ -5,6 +5,8 @@ import { MODES } from './clangMode';
 import { getBinPath } from './clangPath';
 import sax = require('sax');
 
+export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
+
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
   private defaultConfigure = {
     executable: 'clang-format',
@@ -180,8 +182,14 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
             return resolve(null);
           }
-          if (err) {
+          if (stderr) {
+            outputChannel.show();
+            outputChannel.clear();
+            outputChannel.appendLine(stderr);
             return reject('Cannot format due to syntax errors.');
+          }
+          if (err) {
+            return reject();
           }
 
           let dummyProcessor = (value: string) => {
