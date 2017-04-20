@@ -3,7 +3,7 @@
 import fs = require('fs');
 import path = require('path');
 
-let binPathCache: {[bin: string]: string} = {};
+let binPathCache: { [bin: string]: string } = {};
 
 export function getBinPath(binname: string) {
   if (binPathCache[binname]) {

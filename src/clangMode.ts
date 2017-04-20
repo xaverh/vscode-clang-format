@@ -9,4 +9,4 @@ for (let l of ['cpp', 'c', 'objective-c', 'objective-cpp', 'java', 'javascript',
   }
 }
 
-export const MODES: vscode.DocumentFilter[] = languages.map((language) => ({language, scheme: 'file'}));
+export const MODES: vscode.DocumentFilter[] = languages.map((language) => ({ language, scheme: 'file' }));

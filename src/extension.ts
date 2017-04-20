@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import {MODES} from './clangMode';
-import {getBinPath} from './clangPath';
+import { MODES } from './clangMode';
+import { getBinPath } from './clangPath';
 import sax = require('sax');
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
@@ -31,7 +31,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       let parser = sax.parser(true, options);
 
       let edits: vscode.TextEdit[] = [];
-      let currentEdit: {length: number, offset: number, text: string};
+      let currentEdit: { length: number, offset: number, text: string };
 
       let codeBuffer = new Buffer(codeContent);
       // encoding position cache
@@ -39,7 +39,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         byte: 0,
         offset: 0
       };
-      let byteToOffset = function(editInfo: {length: number, offset: number}) {
+      let byteToOffset = function (editInfo: { length: number, offset: number }) {
         let offset = editInfo.offset;
         let length = editInfo.length;
 
@@ -68,20 +68,20 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
 
         switch (tag.name) {
-        case 'replacements':
-          return;
+          case 'replacements':
+            return;
 
-        case 'replacement':
-          currentEdit = {
-            length: parseInt(tag.attributes['length'].toString()),
-            offset: parseInt(tag.attributes['offset'].toString()),
-            text: ''
-          };
-          byteToOffset(currentEdit);
-          break;
+          case 'replacement':
+            currentEdit = {
+              length: parseInt(tag.attributes['length'].toString()),
+              offset: parseInt(tag.attributes['offset'].toString()),
+              text: ''
+            };
+            byteToOffset(currentEdit);
+            break;
 
-        default:
-          reject(`Unexpected tag ${tag.name}`);
+          default:
+            reject(`Unexpected tag ${tag.name}`);
         }
 
       };
@@ -219,7 +219,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         workingPath = path.dirname(document.fileName);
       }
 
-      let child = cp.execFile(formatCommandBinPath, formatArgs, {cwd: workingPath}, childCompleted);
+      let child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
       child.stdin.end(codeContent);
 
       if (token) {
