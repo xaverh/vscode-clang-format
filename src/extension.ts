@@ -189,7 +189,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             return reject('Cannot format due to syntax errors.');
           }
           if (err) {
-            return reject()
+            return reject();
           }
 
           let dummyProcessor = (value: string) => {
