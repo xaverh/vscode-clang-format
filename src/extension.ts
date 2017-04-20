@@ -7,10 +7,10 @@ import sax = require('sax');
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
   private defaultConfigure = {
-    executable : 'clang-format',
-    style : 'file',
-    fallbackStyle : 'none',
-    assumeFilename : ''
+    executable: 'clang-format',
+    style: 'file',
+    fallbackStyle: 'none',
+    assumeFilename: ''
   };
 
   public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
@@ -23,25 +23,25 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private getEdits(document: vscode.TextDocument, xml: string, codeContent: string): Thenable<vscode.TextEdit[]> {
     return new Promise((resolve, reject) => {
-      var options = {
-        trim : false,
-        normalize : false,
-        loose : true
+      let options = {
+        trim: false,
+        normalize: false,
+        loose: true
       };
-      var parser = sax.parser(true, options);
+      let parser = sax.parser(true, options);
 
-      var edits: vscode.TextEdit[] = [];
-      var currentEdit: {length : number, offset : number, text : string};
+      let edits: vscode.TextEdit[] = [];
+      let currentEdit: {length: number, offset: number, text: string};
 
-      var codeBuffer = new Buffer(codeContent);
+      let codeBuffer = new Buffer(codeContent);
       // encoding position cache
-      var codeByteOffsetCache = {
-        byte : 0,
-        offset : 0
+      let codeByteOffsetCache = {
+        byte: 0,
+        offset: 0
       };
-      var byteToOffset = function(editInfo: {length : number, offset : number}) {
-        var offset = editInfo.offset;
-        var length = editInfo.length;
+      let byteToOffset = function(editInfo: {length: number, offset: number}) {
+        let offset = editInfo.offset;
+        let length = editInfo.length;
 
         if (offset >= codeByteOffsetCache.byte) {
           editInfo.offset = codeByteOffsetCache.offset + codeBuffer.slice(codeByteOffsetCache.byte, offset).toString('utf8').length;
@@ -73,9 +73,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
         case 'replacement':
           currentEdit = {
-            length : parseInt(tag.attributes['length'].toString()),
-            offset : parseInt(tag.attributes['offset'].toString()),
-            text : ''
+            length: parseInt(tag.attributes['length'].toString()),
+            offset: parseInt(tag.attributes['offset'].toString()),
+            text: ''
           };
           byteToOffset(currentEdit);
           break;
@@ -95,10 +95,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       parser.onclosetag = (tagName) => {
         if (!currentEdit) { return; }
 
-        var start = document.positionAt(currentEdit.offset);
-        var end = document.positionAt(currentEdit.offset + currentEdit.length);
+        let start = document.positionAt(currentEdit.offset);
+        let end = document.positionAt(currentEdit.offset + currentEdit.length);
 
-        var editRange = new vscode.Range(start, end);
+        let editRange = new vscode.Range(start, end);
 
         edits.push(new vscode.TextEdit(editRange, currentEdit.text));
         currentEdit = null;
@@ -169,12 +169,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
     return new Promise((resolve, reject) => {
-      var filename = document.fileName;
+      let filename = document.fileName;
 
-      var formatCommandBinPath = getBinPath(this.getExecutablePath());
-      var codeContent = document.getText();
+      let formatCommandBinPath = getBinPath(this.getExecutablePath());
+      let codeContent = document.getText();
 
-      var childCompleted = (err, stdout, stderr) => {
+      let childCompleted = (err, stdout, stderr) => {
         try {
           if (err && (<any>err).code === 'ENOENT') {
             vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
@@ -184,7 +184,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
             return reject('Cannot format due to syntax errors.');
           }
 
-          var dummyProcessor = (value: string) => {
+          let dummyProcessor = (value: string) => {
             debugger;
             return value;
           };
@@ -195,16 +195,16 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
       };
 
-      var formatArgs = [
+      let formatArgs = [
         '-output-replacements-xml',
         `-style=${this.getStyle(document)}`,
         `-fallback-style=${this.getFallbackStyle(document)}`,
-        `-assume-filename=${this.getAssumedFilename(document)}`,
+        `-assume-filename=${this.getAssumedFilename(document)}`
       ];
 
       if (range) {
-        var offset = document.offsetAt(range.start);
-        var length = document.offsetAt(range.end) - offset;
+        let offset = document.offsetAt(range.start);
+        let length = document.offsetAt(range.end) - offset;
 
         // fix charater length to byte length
         length = Buffer.byteLength(codeContent.substr(offset, length), 'utf8');
@@ -214,12 +214,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         formatArgs.push(`-offset=${offset}`, `-length=${length}`);
       }
 
-      var workingPath = vscode.workspace.rootPath;
+      let workingPath = vscode.workspace.rootPath;
       if (!document.isUntitled) {
         workingPath = path.dirname(document.fileName);
       }
 
-      var child = cp.execFile(formatCommandBinPath, formatArgs, {cwd : workingPath}, childCompleted);
+      let child = cp.execFile(formatCommandBinPath, formatArgs, {cwd: workingPath}, childCompleted);
       child.stdin.end(codeContent);
 
       if (token) {
@@ -240,10 +240,10 @@ let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activate(ctx: vscode.ExtensionContext): void {
 
-  var formatter = new ClangDocumentFormattingEditProvider();
-  var availableLanguages = {};
+  let formatter = new ClangDocumentFormattingEditProvider();
+  let availableLanguages = {};
 
-  MODES.forEach(mode => {
+  MODES.forEach((mode) => {
     ctx.subscriptions.push(vscode.languages.registerDocumentRangeFormattingEditProvider(mode, formatter));
     ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(mode, formatter));
     availableLanguages[mode.language] = true;

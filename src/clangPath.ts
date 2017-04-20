@@ -3,12 +3,12 @@
 import fs = require('fs');
 import path = require('path');
 
-var binPathCache: {[bin: string] : string;} = {}
+let binPathCache: {[bin: string]: string} = {};
 
 export function getBinPath(binname: string) {
   if (binPathCache[binname]) {
-    return binPathCache[binname]
-  };
+    return binPathCache[binname];
+  }
 
   for (let binNameToSearch of correctBinname(binname)) {
     // clang-format.executable has a valid absolute path
@@ -18,8 +18,8 @@ export function getBinPath(binname: string) {
     }
 
     if (process.env['PATH']) {
-      var pathparts = process.env['PATH'].split(path.delimiter);
-      for (var i = 0; i < pathparts.length; i++) {
+      let pathparts = process.env['PATH'].split(path.delimiter);
+      for (let i = 0; i < pathparts.length; i++) {
         let binpath = path.join(pathparts[i], binNameToSearch);
         if (fs.existsSync(binpath)) {
           binPathCache[binname] = binpath;
@@ -34,10 +34,10 @@ export function getBinPath(binname: string) {
   return binname;
 }
 
-function correctBinname(binname: string): [ string ] {
+function correctBinname(binname: string): [string] {
   if (process.platform === 'win32') {
-    return [ binname + '.exe', binname + '.bat', binname + '.cmd', binname ];
+    return [binname + '.exe', binname + '.bat', binname + '.cmd', binname];
   } else {
-    return [ binname ];
+    return [binname];
   }
 }
