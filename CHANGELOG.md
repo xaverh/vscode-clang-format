@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0] - 2017-04-20
+### Added
+- Output console shows syntax errors in `.clang-format` files
+- Extension works on Apex now
+
 ## [1.3.0] - 2017-04-20
 ### Added
 - ```-assume-filename=``` option configurable as ```clang-format.assumeFilename``` in user/workspace settings
