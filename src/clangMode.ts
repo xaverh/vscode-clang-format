@@ -1,6 +1,6 @@
 'use strict';
 
-import vscode = require('vscode');
+import * as vscode from 'vscode';
 
 export const ALIAS = {
   'proto3': 'proto'

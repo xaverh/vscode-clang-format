@@ -5,7 +5,7 @@
   "version": "1.5.0",
   "publisher": "xaver",
   "engines": {
-    "vscode": "^1.0.0"
+    "vscode": "^1.1.0"
   },
   "galleryBanner": {
     "color": "#005577",
@@ -207,10 +207,10 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/node": "^6.0.40",
-    "@types/sax": "^0.0.28",
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0"
+    "@types/node": "^7.0.22",
+    "@types/sax": "^1.0.0",
+    "typescript": "^2.3.3",
+    "vscode": "^1.1.0"
   },
   "icon": "clang-format.png",
   "repository": {

@@ -2,13 +2,13 @@
 # yarn lockfile v1
 
 
-"@types/node@*", "@types/node@^6.0.40":
-  version "6.0.73"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.73.tgz#85dc4bb6f125377c75ddd2519a1eeb63f0a4ed70"
+"@types/node@*", "@types/node@^7.0.22":
+  version "7.0.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.22.tgz#4593f4d828bdd612929478ea40c67b4f403ca255"
 
-"@types/sax@^0.0.28":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@types/sax/-/sax-0.0.28.tgz#08bc2bed7697f97b0f345a0ba5d93e5f163c89e2"
+"@types/sax@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/sax/-/sax-1.0.0.tgz#30d5e6bdbf126daf6e412c639251dd974bd47cdc"
   dependencies:
     "@types/node" "*"
 
@@ -1450,7 +1450,7 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
 
-typescript@^2.0.3:
+typescript@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.3.3.tgz#9639f3c3b40148e8ca97fe08a51dd1891bb6be22"
 
@@ -1543,7 +1543,7 @@ vinyl@~2.0.1:
     remove-trailing-separator "^1.0.1"
     replace-ext "^1.0.0"
 
-vscode@^1.0.0:
+vscode@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vscode/-/vscode-1.1.0.tgz#b04c2399b6ec768135c9688e7873d776e28dcb95"
   dependencies:
