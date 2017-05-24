@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.0] - 2017-05-25
+### Added
+- Support for proto3 (by [OWenT](https://github.com/owt5008137))
+
 ## [1.4.0] - 2017-04-20
 ### Added
 - Output console shows syntax errors in `.clang-format` files
