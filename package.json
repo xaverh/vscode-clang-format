@@ -22,7 +22,8 @@
     "JavaScript",
     "Objective-C",
     "Clang",
-    "LLVM"
+    "LLVM",
+    "Protobuf"
   ],
   "main": "./out/src/extension",
   "activationEvents": [
@@ -34,6 +35,7 @@
     "onLanguage:javascript",
     "onLanguage:typescript",
     "onLanguage:proto",
+    "onLanguage:proto3",
     "onLanguage:apex"
   ],
   "contributes": {
