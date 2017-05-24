@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import { MODES } from './clangMode';
-import { getBinPath } from './clangPath';
+import {MODES,
+        ALIAS} from './clangMode';
+import {getBinPath} from './clangPath';
 import sax = require('sax');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
@@ -41,7 +42,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         byte: 0,
         offset: 0
       };
-      let byteToOffset = function (editInfo: { length: number, offset: number }) {
+      let byteToOffset = function(editInfo: { length: number, offset: number }) {
         let offset = editInfo.offset;
         let length = editInfo.length;
 
@@ -70,20 +71,20 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
 
         switch (tag.name) {
-          case 'replacements':
-            return;
+        case 'replacements':
+          return;
 
-          case 'replacement':
-            currentEdit = {
-              length: parseInt(tag.attributes['length'].toString()),
-              offset: parseInt(tag.attributes['offset'].toString()),
-              text: ''
-            };
-            byteToOffset(currentEdit);
-            break;
+        case 'replacement':
+          currentEdit = {
+            length: parseInt(tag.attributes['length'].toString()),
+            offset: parseInt(tag.attributes['offset'].toString()),
+            text: ''
+          };
+          byteToOffset(currentEdit);
+          break;
 
-          default:
-            reject(`Unexpected tag ${tag.name}`);
+        default:
+          reject(`Unexpected tag ${tag.name}`);
         }
 
       };
@@ -133,8 +134,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       });
   }
 
+  private getLanguage(document: vscode.TextDocument): string {
+    return ALIAS[document.languageId] || document.languageId;
+  }
+
   private getStyle(document: vscode.TextDocument) {
-    let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.style`);
+    let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.style`);
     if (ret.trim()) {
       return ret.trim();
     }
@@ -148,7 +153,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private getFallbackStyle(document: vscode.TextDocument) {
-    let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${document.languageId}.fallbackStyle`);
+    let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.fallbackStyle`);
     if (strConf.trim()) {
       return strConf;
     }
