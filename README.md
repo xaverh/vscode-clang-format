@@ -1,37 +1,53 @@
 # README
 
-## Release history
-
-### v 0.9.0
-* add protobuf support (work with https://marketplace.visualstudio.com/items?itemName=peterj.proto)
-* add javascript/typescript support
-* allow different style & fallback style option for different languages
-* format on save is available now (just like https://github.com/Microsoft/vscode-go/blob/master/src/goMain.ts)
-
-### v 0.6.1
-* clean up dependencies #9
-
-### v 0.6.0
-* fixed multibyte character handling #7 (by [OWenT](https://github.com/owt5008137))
-* fixed "clang-format is ignoring the -style setting because of invalid value" #6 (by [OWenT](https://github.com/owt5008137))
-* LLVM style is now the default fallback style (fixes #1)
-* changed dependency to VS Code 1.0.0 or higher
-
-### v 0.5.0
-* Included [OWenT](https://github.com/owt5008137)'s changes:
-  1. add setting of clang-format executable
-  2. add style setting
-  3. add fallback style setting
-
-### v 0.1.2
-* Included [ioachim](https://github.com/ioachim/)'s changes:
-> it doesn't require saving the file, works by doing partial edits (instead of replacing the whole buffer), and enables range formatting.
-
-[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Protobuf code. It can be configured with a config file within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Objective-C++/Protobuf code. It can be configured with a config file within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 
 ## Usage
-If clang-format is installed and in PATH, C/C++ etc source files can be formatted with Visual Studio Code's built-in formatter (Usually: Ctrl+Shift+F).
+
+This extension allows clang-format (version 3.6 or higher) to be used to format C/C++, Javascript etc.
+source files directly from within Visual Studio Code.
+
+Files can be formatted on-demand by right clicking in the document and
+selecting "Format Document", or by using the associated keyboard shortcut
+(usually Ctrl+Shift+F on Windows/Linux, and Cmd+Shift+F on Mac).
+
+To automatically format a file on save, add the following to your
+vscode settings.json file:
+
+```json
+{
+    "editor.formatOnSave": true
+}
+```
+
+## Specifying the location of clang-format
+
+This extension will attempt to find clang-format on your `PATH`.
+Alternatively, the clang-format executable can be specified in your vscode
+settings.json file:
+
+```json
+{
+    "clang-format.executable": "/absolute/path/to/clang-format"
+}
+```
+
+Placeholders can also be used in the `clang-format.executable` value.
+The following placeholders are supported:
+
+- `${workspaceRoot}` - replaced by the absolute path of the current vscode
+  workspace root.
+- `${cwd}` - replaced by the current working directory of vscode.
+- `${env.VAR}` - replaced by the environment variable $VAR, e.g. `${env.HOME}`
+  will be replaced by `$HOME`, your home directory.
+
+Some examples:
+
+- `${workspaceRoot}/node_modules/.bin/clang-format` - specifies the version of
+  clang that has been added to your workspace by `npm install clang-format`.
+- `${env.HOME}/tools/clang38/clang-format` - use a specific clang format version
+  under your home directory.
 
 ## Source code
 Available on github: https://github.com/xaverh/vscode-clang-format-provider
