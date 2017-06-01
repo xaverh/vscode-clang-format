@@ -5,7 +5,7 @@
 
 ## Usage
 
-This extension allows clang-format (version 3.6 or higher) to be used to format C/C++, Javascript etc.
+This extension allows clang-format (version 3.8 or higher) to be used to format C/C++, Javascript etc.
 source files directly from within Visual Studio Code.
 
 Files can be formatted on-demand by right clicking in the document and
