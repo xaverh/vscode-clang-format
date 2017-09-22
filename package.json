@@ -36,7 +36,8 @@
     "onLanguage:typescript",
     "onLanguage:proto",
     "onLanguage:proto3",
-    "onLanguage:apex"
+    "onLanguage:apex",
+    "onLanguage:glsl"
   ],
   "contributes": {
     "configuration": {
@@ -192,6 +193,21 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for Apex, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.glsl.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for GLSL (requires reloading Visual Studio Code)"
+        },
+          "clang-format.language.glsl.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for GLSL, left empty to use clang-format.style"
+        },
+          "clang-format.language.glsl.fallbackStyle": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for GLSL, left empty to use clang-format.fallbackStyle"
         },
         "clang-format.assumeFilename": {
           "type": "string",
