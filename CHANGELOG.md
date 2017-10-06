@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.0] - 2017-10-06
+### Added
+- Support for glsl (by [cadenasgmbh](https://github.com/cadenasgmbh/))
+
 ## [1.5.0] - 2017-05-25
 ### Added
 - Support for proto3 (by [OWenT](https://github.com/owt5008137))

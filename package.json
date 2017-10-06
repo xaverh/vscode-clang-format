@@ -2,7 +2,7 @@
   "name": "clang-format",
   "displayName": "Clang-Format",
   "description": "Use Clang-Format in Visual Studio Code",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "publisher": "xaver",
   "engines": {
     "vscode": "^1.1.0"
@@ -199,12 +199,12 @@
           "default": true,
           "description": "enable formatting for GLSL (requires reloading Visual Studio Code)"
         },
-          "clang-format.language.glsl.style": {
+        "clang-format.language.glsl.style": {
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for GLSL, left empty to use clang-format.style"
         },
-          "clang-format.language.glsl.fallbackStyle": {
+        "clang-format.language.glsl.fallbackStyle": {
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for GLSL, left empty to use clang-format.fallbackStyle"
