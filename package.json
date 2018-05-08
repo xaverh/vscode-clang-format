@@ -223,10 +223,10 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/node": "^7.0.46",
+    "@types/node": "^7.0.63",
     "@types/sax": "^1.0.0",
-    "typescript": "^2.6.1",
-    "vscode": "^1.1.6"
+    "typescript": "^2.8.3",
+    "vscode": "^1.1.17"
   },
   "icon": "clang-format.png",
   "repository": {
