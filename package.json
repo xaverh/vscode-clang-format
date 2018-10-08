@@ -28,6 +28,7 @@
   ],
   "main": "./out/src/extension",
   "activationEvents": [
+    "onCommand:clang-format.formatSelection",
     "onLanguage:cpp",
     "onLanguage:c",
     "onLanguage:objective-c",
@@ -42,6 +43,13 @@
     "onLanguage:cuda"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "clang-format.formatSelection",
+        "title": "Format selection or around cursor",
+        "category": "Clang-Format"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Clang-Format configuration",

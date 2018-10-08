@@ -2,11 +2,22 @@ import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
 import {MODES,
-        ALIAS} from './clangMode';
+        ALIAS,
+        LANGUAGES} from './clangMode';
 import {getBinPath} from './clangPath';
 import sax = require('sax');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
+
+interface FormatResult {
+  edits: vscode.TextEdit[];
+  newCursorPos: vscode.Position;
+}
+
+interface EditInfo {
+  offset: number;
+  length: number;
+}
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
   private defaultConfigure = {
@@ -17,15 +28,46 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   };
 
   public provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
-    return this.doFormatDocument(document, null, options, token);
+    return this.doFormatDocument(document, null, options, token).then((result) => {
+      return result.edits;
+    });
   }
 
   public provideDocumentRangeFormattingEdits(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
-    return this.doFormatDocument(document, range, options, token);
+    return this.doFormatDocument(document, range, options, token).then((result) => {
+      return result.edits;
+    });
   }
 
-  private getEdits(document: vscode.TextDocument, xml: string, codeContent: string): Thenable<vscode.TextEdit[]> {
+  public formatSelection(): void {
+    let editor = vscode.window.activeTextEditor;
+    let document = editor.document;
+
+    if (LANGUAGES.indexOf(document.languageId) === -1) {
+      vscode.commands.executeCommand('editor.action.formatSelection');
+      return;
+    }
+
+    this.doFormatDocument(editor.document, editor.selection, undefined, undefined).then(
+      (result) => {
+        editor.edit((editBuilder) => {
+          for (let edit of result.edits)
+            editBuilder.replace(edit.range, edit.newText);
+        }).then((didEdits) => {
+          if (!didEdits)
+            vscode.window.showErrorMessage('Could not apply formatting edits');
+          else
+            editor.selection = new vscode.Selection(result.newCursorPos, result.newCursorPos);
+        });
+      }
+    );
+  }
+
+  private getEdits(document: vscode.TextDocument, xml: string,
+      codeContent: string): Thenable<FormatResult> {
     return new Promise((resolve, reject) => {
+      let newCursorPosInfo = {offset: 0, length: 0};
+
       let options = {
         trim: false,
         normalize: false,
@@ -61,6 +103,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         return editInfo;
       };
 
+      let onNewCursorPos = false;
+
       parser.onerror = (err) => {
         reject(err.message);
       };
@@ -73,6 +117,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         switch (tag.name) {
         case 'replacements':
           return;
+
+        case 'cursor':
+          onNewCursorPos = true;
+          break;
 
         case 'replacement':
           currentEdit = {
@@ -90,12 +138,18 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       };
 
       parser.ontext = (text) => {
-        if (!currentEdit) { return; }
-
-        currentEdit.text = text;
+        if (onNewCursorPos) {
+          newCursorPosInfo.offset = parseInt(text);
+          byteToOffset(newCursorPosInfo);
+        } else if (currentEdit)
+          currentEdit.text = text;
       };
 
       parser.onclosetag = (tagName) => {
+        if (onNewCursorPos) {
+          onNewCursorPos = false;
+          return;
+        }
         if (!currentEdit) { return; }
 
         let start = document.positionAt(currentEdit.offset);
@@ -108,7 +162,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       };
 
       parser.onend = () => {
-        resolve(edits);
+        resolve({edits, newCursorPos: document.positionAt(newCursorPosInfo.offset)});
       };
 
       parser.write(xml);
@@ -174,7 +228,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     return assumedFilename;
   }
 
-  private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
+  private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<FormatResult> {
     return new Promise((resolve, reject) => {
       let filename = document.fileName;
 
@@ -198,6 +252,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         offset = Buffer.byteLength(codeContent.substr(0, offset), 'utf8');
 
         formatArgs.push(`-offset=${offset}`, `-length=${length}`);
+        if (length === 0)
+          formatArgs.push(`-cursor=${offset}`);
       }
 
       let workingPath = vscode.workspace.rootPath;
@@ -245,10 +301,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       }
     });
   }
-
-  public formatDocument(document: vscode.TextDocument): Thenable<vscode.TextEdit[]> {
-    return this.doFormatDocument(document, null, null, null);
-  }
 }
 
 let diagnosticCollection: vscode.DiagnosticCollection;
@@ -263,4 +315,10 @@ export function activate(ctx: vscode.ExtensionContext): void {
     ctx.subscriptions.push(vscode.languages.registerDocumentFormattingEditProvider(mode, formatter));
     availableLanguages[mode.language] = true;
   });
+
+  ctx.subscriptions.push(
+    vscode.commands.registerCommand('clang-format.formatSelection',
+      () => {
+        formatter.formatSelection();
+      }));
 }
