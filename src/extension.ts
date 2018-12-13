@@ -181,33 +181,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       let formatCommandBinPath = getBinPath(this.getExecutablePath());
       let codeContent = document.getText();
 
-      let childCompleted = (err, stdout, stderr) => {
-        try {
-          if (err && (<any>err).code === 'ENOENT') {
-            vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
-            return resolve(null);
-          }
-          if (stderr) {
-            outputChannel.show();
-            outputChannel.clear();
-            outputChannel.appendLine(stderr);
-            return reject('Cannot format due to syntax errors.');
-          }
-          if (err) {
-            return reject();
-          }
-
-          let dummyProcessor = (value: string) => {
-            debugger;
-            return value;
-          };
-          return resolve(this.getEdits(document, stdout, codeContent));
-
-        } catch (e) {
-          reject(e);
-        }
-      };
-
       let formatArgs = [
         '-output-replacements-xml',
         `-style=${this.getStyle(document)}`,
@@ -232,8 +205,37 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         workingPath = path.dirname(document.fileName);
       }
 
-      let child = cp.execFile(formatCommandBinPath, formatArgs, { cwd: workingPath }, childCompleted);
+      let stdout = '';
+      let stderr = '';
+      let child = cp.spawn(formatCommandBinPath, formatArgs, { cwd: workingPath });
       child.stdin.end(codeContent);
+      child.stdout.on('data', chunk => stdout += chunk);
+      child.stderr.on('data', chunk => stderr += chunk);
+      child.on('error', err => {
+        if (err && (<any>err).code === 'ENOENT') {
+          vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
+          return resolve(null);
+        }
+        return reject(err);
+      });
+      child.on('close', code => {
+        try {
+          if (stderr.length != 0) {
+            outputChannel.show();
+            outputChannel.clear();
+            outputChannel.appendLine(stderr);
+            return reject('Cannot format due to syntax errors.');
+          }
+
+          if (code != 0) {
+            return reject();
+          }
+
+          return resolve(this.getEdits(document, stdout, codeContent));
+        } catch (e) {
+          reject(e);
+        }
+      });
 
       if (token) {
         token.onCancellationRequested(() => {
