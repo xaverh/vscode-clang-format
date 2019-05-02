@@ -6,6 +6,7 @@ import {MODES,
         LANGUAGES} from './clangMode';
 import {getBinPath} from './clangPath';
 import sax = require('sax');
+import * as shlex from 'shlex';
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
 
@@ -39,7 +40,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     });
   }
 
-  public formatSelection(): void {
+  public formatSelection(alternate = false): void {
     let editor = vscode.window.activeTextEditor;
     let document = editor.document;
 
@@ -48,7 +49,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       return;
     }
 
-    this.doFormatDocument(editor.document, editor.selection, undefined, undefined).then(
+    this.doFormatDocument(editor.document, editor.selection, undefined, undefined, alternate).then(
       (result) => {
         editor.edit((editBuilder) => {
           for (let edit of result.edits)
@@ -192,8 +193,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     return ALIAS[document.languageId] || document.languageId;
   }
 
-  private getStyle(document: vscode.TextDocument) {
-    let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.style`);
+  private getStyle(document: vscode.TextDocument, alternate = false) {
+    const styleOpt = alternate ? 'alternate.style' : 'style';
+    let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.${styleOpt}`);
     if (ret.trim()) {
       return ret.trim();
     }
@@ -228,7 +230,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     return assumedFilename;
   }
 
-  private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<FormatResult> {
+  private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken, alternate = false): Thenable<FormatResult> {
     return new Promise((resolve, reject) => {
       let filename = document.fileName;
 
@@ -237,7 +239,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
       let formatArgs = [
         '-output-replacements-xml',
-        `-style=${this.getStyle(document)}`,
+        `-style=${this.getStyle(document, alternate)}`,
         `-fallback-style=${this.getFallbackStyle(document)}`,
         `-assume-filename=${this.getAssumedFilename(document)}`
       ];
@@ -263,6 +265,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
       let stdout = '';
       let stderr = '';
+      const argsString = formatArgs.map(shlex.quote).join(' ');
+      outputChannel.clear();
+      outputChannel.appendLine(`Calling with arguments: ${argsString}`)
       let child = cp.spawn(formatCommandBinPath, formatArgs, { cwd: workingPath });
       child.stdin.end(codeContent);
       child.stdout.on('data', chunk => stdout += chunk);
@@ -277,13 +282,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       child.on('close', code => {
         try {
           if (stderr.length != 0) {
-            outputChannel.show();
-            outputChannel.clear();
             outputChannel.appendLine(stderr);
-            return reject('Cannot format due to syntax errors.');
           }
 
           if (code != 0) {
+            outputChannel.show();
+            outputChannel.appendLine(`Process exited with code ${code}`);
             return reject();
           }
 
@@ -320,5 +324,10 @@ export function activate(ctx: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('clang-format.formatSelection',
       () => {
         formatter.formatSelection();
+      }));
+  ctx.subscriptions.push(
+    vscode.commands.registerCommand('clang-format.formatSelectionAlternate',
+      () => {
+        formatter.formatSelection(true /* alternate */);
       }));
 }
