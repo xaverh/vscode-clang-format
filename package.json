@@ -39,6 +39,7 @@
     "onLanguage:proto3",
     "onLanguage:apex",
     "onLanguage:glsl",
+    "onLanguage:hlsl",
     "onLanguage:cuda"
   ],
   "contributes": {
@@ -210,6 +211,21 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for GLSL, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.hlsl.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for HLSL (requires reloading Visual Studio Code)"
+        },
+        "clang-format.language.hlsl.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for HLSL, left empty to use clang-format.style"
+        },
+        "clang-format.language.hlsl.fallbackStyle": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for HLSL, left empty to use clang-format.fallbackStyle"
         },
         "clang-format.language.cuda.enable": {
           "type": "boolean",
