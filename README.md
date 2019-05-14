@@ -49,5 +49,14 @@ Some examples:
 - `${env.HOME}/tools/clang38/clang-format` - use a specific clang format version
   under your home directory.
 
+Placeholders are also supported in `clang-format.assumeFilename`. The supported
+placeholders are `${file}`, `${fileNoExtension}`, `${fileBasename}`,
+`${fileBasenameNoExtension}`, and `${fileExtname}`, with the same meaning as the
+predefined variables in [other configuration files](https://code.visualstudio.com/docs/editor/variables-reference).
+
+For example:
+- `${fileNoExtension}.cpp` - `/home/src/foo.h` will be formatted with
+  `-assume-filename /home/src/foo.cpp`.
+
 ## Source code
 Available on github: https://github.com/xaverh/vscode-clang-format-provider
