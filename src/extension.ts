@@ -171,7 +171,14 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     if (assumedFilename === '') {
       return document.fileName;
     }
-    return assumedFilename;
+    let parsedPath = path.parse(document.fileName);
+    let fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
+    return assumedFilename
+        .replace(/\${file}/g, document.fileName)
+        .replace(/\${fileNoExtension}/g, fileNoExtension)
+        .replace(/\${fileBasename}/g, parsedPath.base)
+        .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
+        .replace(/\${fileExtname}/g, parsedPath.ext);
   }
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
