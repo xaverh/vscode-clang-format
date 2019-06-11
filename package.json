@@ -2,7 +2,7 @@
   "name": "clang-format",
   "displayName": "Clang-Format",
   "description": "Use Clang-Format in Visual Studio Code",
-  "version": "1.9.0",
+  "version": "99.9.0",
   "publisher": "xaver",
   "engines": {
     "vscode": "^1.1.0"
@@ -12,7 +12,8 @@
     "theme": "dark"
   },
   "dependencies": {
-    "sax": "^1.2.1"
+    "sax": "^1.2.1",
+    "shlex": "^2.0.1"
   },
   "categories": [
     "Formatters"
@@ -28,6 +29,7 @@
   ],
   "main": "./out/src/extension",
   "activationEvents": [
+    "onCommand:clang-format.formatSelection",
     "onLanguage:cpp",
     "onLanguage:c",
     "onLanguage:objective-c",
@@ -43,6 +45,18 @@
     "onLanguage:cuda"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "clang-format.formatSelection",
+        "title": "Format selection or around cursor",
+        "category": "Clang-Format"
+      },
+      {
+        "command": "clang-format.formatSelectionAlternate",
+        "title": "Format selection or around cursor (alternate)",
+        "category": "Clang-Format"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Clang-Format configuration",
@@ -72,10 +86,15 @@
           "default": "",
           "description": "clang-format fallback style for C++, left empty to use clang-format.style"
         },
+        "clang-format.language.cpp.alternate.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for C++, left empty to use clang-format.style"
+        },
         "clang-format.language.cpp.fallbackStyle": {
           "type": "string",
           "default": "",
-          "description": "clang-format fallback style for C++, left empty to use clang-format.fallbackStyle"
+          "description": "clang-format alternate style for C++"
         },
         "clang-format.language.c.enable": {
           "type": "boolean",
@@ -86,6 +105,11 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for C, left empty to use clang-format.style"
+        },
+        "clang-format.language.c.alternate.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format alternate style for C"
         },
         "clang-format.language.c.fallbackStyle": {
           "type": "string",
