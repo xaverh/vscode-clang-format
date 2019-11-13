@@ -8,6 +8,16 @@ import sax = require('sax');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
 
+function getPlatformString() {
+  switch(process.platform) {
+    case 'win32': return 'windows';
+    case 'linux': return 'linux';
+    case 'darwin': return 'osx';
+  }
+
+  return 'unknown';
+}
+
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
   private defaultConfigure = {
     executable: 'clang-format',
@@ -120,7 +130,13 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   /// Get execute name in clang-format.executable, if not found, use default value
   /// If configure has changed, it will get the new value
   private getExecutablePath() {
-    let execPath = vscode.workspace.getConfiguration('clang-format').get<string>('executable');
+    let platform = getPlatformString();
+    let config = vscode.workspace.getConfiguration('clang-format');
+
+    let platformExecPath = config.get<string>('executable.' + platform);
+    let defaultExecPath = config.get<string>('executable');
+    let execPath = platformExecPath || defaultExecPath;
+
     if (!execPath) {
       return this.defaultConfigure.executable;
     }

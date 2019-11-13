@@ -52,6 +52,21 @@
           "default": "clang-format",
           "description": "clang-format executable path"
         },
+        "clang-format.executable.windows": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format executable path on Windows"
+        },
+        "clang-format.executable.linux": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format executable path on Linux"
+        },
+        "clang-format.executable.osx": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format executable path on macOS"
+        },
         "clang-format.style": {
           "type": "string",
           "default": "file",
