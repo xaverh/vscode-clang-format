@@ -38,6 +38,9 @@ The following placeholders are supported:
 
 - `${workspaceRoot}` - replaced by the absolute path of the current vscode
   workspace root.
+- `${workspaceFolder}` - replaced by the absolute path of the current vscode 
+  workspace. In case of outside-workspace files `${workspaceFolder}` expands 
+  to the absolute path of the first available workspace.
 - `${cwd}` - replaced by the current working directory of vscode.
 - `${env.VAR}` - replaced by the environment variable $VAR, e.g. `${env.HOME}`
   will be replaced by `$HOME`, your home directory.
