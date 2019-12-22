@@ -128,6 +128,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     // replace placeholders, if present
     return execPath
       .replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
+      .replace(/\${workspaceFolder}/g, this.getWorkspaceFolder())
       .replace(/\${cwd}/g, process.cwd())
       .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
         return process.env[envName];
@@ -179,6 +180,28 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         .replace(/\${fileBasename}/g, parsedPath.base)
         .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
         .replace(/\${fileExtname}/g, parsedPath.ext);
+  }
+
+  private getWorkspaceFolder(): string|undefined {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showErrorMessage("Unable to get the location of clang-format executable - no active workspace selected");
+      return undefined;
+    }
+
+    if (!vscode.workspace.workspaceFolders) {
+      vscode.window.showErrorMessage("Unable to get the location of clang-format executable - no workspaces available");
+      return undefined
+    }
+
+    const currentDocumentUri = editor.document.uri
+    let workspacePath = vscode.workspace.getWorkspaceFolder(currentDocumentUri);
+    if (!workspacePath) {
+      const fallbackWorkspace = vscode.workspace.workspaceFolders[0];
+      vscode.window.showWarningMessage(`Unable to deduce the location of clang-format executable for file outside the workspace - expanding \${workspaceFolder} to '${fallbackWorkspace.name}' path`);
+      workspacePath = fallbackWorkspace;
+    }
+    return workspacePath.uri.path;
   }
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
