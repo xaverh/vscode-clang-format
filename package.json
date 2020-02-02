@@ -30,6 +30,7 @@
   "activationEvents": [
     "onLanguage:cpp",
     "onLanguage:c",
+    "onLanguage:csharp",
     "onLanguage:objective-c",
     "onLanguage:objective-cpp",
     "onLanguage:java",
@@ -91,6 +92,21 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for C, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.csharp.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for C# (requires reloading Visual Studio Code)"
+        },
+        "clang-format.language.csharp.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for C#, left empty to use clang-format.style"
+        },
+        "clang-format.language.csharp.fallbackStyle": {
+          "type": "string",
+          "default": "Microsoft",
+          "description": "clang-format fallback style for C#, left empty to use clang-format.fallbackStyle"
         },
         "clang-format.language.objective-c.enable": {
           "type": "boolean",
