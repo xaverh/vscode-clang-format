@@ -12,7 +12,7 @@
     "theme": "dark"
   },
   "dependencies": {
-    "sax": "^1.2.1"
+    "sax": "^1.2.4"
   },
   "categories": [
     "Formatters"
@@ -287,10 +287,10 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/node": "^7.10.2",
-    "@types/sax": "^1.0.1",
-    "typescript": "^3.2.4",
-    "vscode": "^1.1.27"
+    "@types/node": "^13.7.0",
+    "@types/sax": "^1.2.1",
+    "typescript": "^3.7.5",
+    "vscode": "^1.1.36"
   },
   "icon": "clang-format.png",
   "repository": {
