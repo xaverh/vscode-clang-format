@@ -41,7 +41,8 @@
     "onLanguage:apex",
     "onLanguage:glsl",
     "onLanguage:hlsl",
-    "onLanguage:cuda"
+    "onLanguage:cuda",
+    "onLanguage:cuda-cpp"
   ],
   "contributes": {
     "configuration": {
