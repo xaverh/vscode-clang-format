@@ -41,7 +41,8 @@
     "onLanguage:apex",
     "onLanguage:glsl",
     "onLanguage:hlsl",
-    "onLanguage:cuda"
+    "onLanguage:cuda",
+    "onLanguage:cuda-cpp"
   ],
   "contributes": {
     "configuration": {
@@ -269,6 +270,21 @@
           "description": "clang-format fallback style for CUDA, left empty to use clang-format.style"
         },
         "clang-format.language.cuda.fallbackStyle": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for CUDA, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.cuda-cpp.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for CUDA (requires reloading Visual Studio Code)"
+        },
+        "clang-format.language.cuda-cpp.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for CUDA, left empty to use clang-format.style"
+        },
+        "clang-format.language.cuda-cpp.fallbackStyle": {
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for CUDA, left empty to use clang-format.fallbackStyle"
