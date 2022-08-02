@@ -7,7 +7,7 @@ export const ALIAS = {
 };
 
 let languages: string[] = [];
-for (let l of ['cpp', 'c', 'csharp', 'objective-c', 'objective-cpp', 'java', 'javascript', 'typescript', 'proto', 'proto3', 'apex', 'glsl', 'hlsl', 'cuda', 'cuda-cpp']) {
+for (let l of ['cpp', 'c', 'csharp', 'objective-c', 'objective-cpp', 'java', 'javascript', 'json', 'typescript', 'proto', 'proto3', 'apex', 'glsl', 'hlsl', 'cuda', 'cuda-cpp']) {
   let confKey = `language.${ALIAS[l] || l}.enable`;
   if (vscode.workspace.getConfiguration('clang-format').get(confKey)) {
     languages.push(l);
