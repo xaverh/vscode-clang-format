@@ -69,9 +69,9 @@ For example:
 
 On Linux, one can simply run `sudo apt install clang-format`. 
 
-On Windows, the simplest way is to install LLVM which contains the clang-format binary to the default path either using the [installer](https://llvm.org/) or by simply running `winget install -e --id LLVM.LLVM` using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). 
+On Windows, the simplest way is to install LLVM to the default path either using the [installer](https://llvm.org/) or by simply running `winget install -e --id LLVM.LLVM` using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). 
 
-The resulting path then becomes:
+LLVM contains the clang-format binary, the resulting pat for the `clang-format.executable` then becomes:
 ```json
 {
     "clang-format.executable": "c:\\Program Files\\LLVM\\bin\\clang-format.exe"
