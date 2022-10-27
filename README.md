@@ -65,5 +65,18 @@ For example:
 - `${fileNoExtension}.cpp` - `/home/src/foo.h` will be formatted with
   `-assume-filename /home/src/foo.cpp`.
 
+## Installing Clang-Format
+
+On Linux, one can simply run `sudo apt install clang-format`. 
+
+On Windows, the simplest way is to install LLVM which contains the clang-format binary to the default path either using the [installer](https://llvm.org/) or by simply running `winget install -e --id LLVM.LLVM` using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). 
+
+The resulting path then becomes:
+```json
+{
+    "clang-format.executable": "c:\\Program Files\\LLVM\\bin\\clang-format.exe"
+}
+```
+
 ## Source code
 Available on github: https://github.com/xaverh/vscode-clang-format-provider
