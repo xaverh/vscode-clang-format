@@ -1,6 +1,10 @@
 # README
 
-[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Objective-C++/Protobuf code. It can be configured with a config file within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+[![License: MIT](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/xaverh/vscode-clang-format/blob/master/LICENSE)
+[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/xaver.clang-format.svg)](https://marketplace.visualstudio.com/items?itemName=xaver.clang-format)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/xaver.clang-format.svg)](https://marketplace.visualstudio.com/items?itemName=xaver.clang-format)
+
+[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Objective-C++/Protobuf code. It can be configured with a config file named `.clang-format` within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 
 ## Usage
@@ -60,6 +64,19 @@ predefined variables in [other configuration files](https://code.visualstudio.co
 For example:
 - `${fileNoExtension}.cpp` - `/home/src/foo.h` will be formatted with
   `-assume-filename /home/src/foo.cpp`.
+
+## Installing Clang-Format
+
+On Linux, one can simply run `sudo apt install clang-format`. 
+
+On Windows, the simplest way is to install LLVM to the default path either using the [installer](https://llvm.org/) or by simply running `winget install -e --id LLVM.LLVM` using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/). 
+
+LLVM contains the clang-format binary, the resulting pat for the `clang-format.executable` then becomes:
+```json
+{
+    "clang-format.executable": "c:\\Program Files\\LLVM\\bin\\clang-format.exe"
+}
+```
 
 ## Source code
 Available on github: https://github.com/xaverh/vscode-clang-format-provider
