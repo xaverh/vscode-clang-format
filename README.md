@@ -21,7 +21,14 @@ vscode settings.json file:
 
 ```json
 {
-    "editor.formatOnSave": true
+    "[cpp]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[c]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "xaver.clang-format"
+    }
 }
 ```
 
