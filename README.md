@@ -65,6 +65,8 @@ For example:
 - `${fileNoExtension}.cpp` - `/home/src/foo.h` will be formatted with
   `-assume-filename /home/src/foo.cpp`.
 
+The same placeholders are also supported for `clang-format.style` and `clang-format.language.<language name>.style`.
+
 ## Installing Clang-Format
 
 On Linux, one can simply run `sudo apt install clang-format`. 
