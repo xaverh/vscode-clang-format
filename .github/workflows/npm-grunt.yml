@@ -27,5 +27,5 @@ jobs:
         npm install -g yarn
       
     - run:
-        npm install --global vsce
+        npm install -g vsce
     - run: vsce package
