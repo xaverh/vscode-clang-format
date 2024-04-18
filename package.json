@@ -43,7 +43,8 @@
     "onLanguage:glsl",
     "onLanguage:hlsl",
     "onLanguage:cuda",
-    "onLanguage:cuda-cpp"
+    "onLanguage:cuda-cpp",
+    "onLanguage:tablegen"
   ],
   "contributes": {
     "configuration": {
@@ -304,6 +305,21 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for CUDA, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.tablegen.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for TableGen (requires reloading Visual Studio Code)"
+        },
+        "clang-format.language.teblegen.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for TableGen, left empty to use clang-format.style"
+        },
+        "clang-format.language.tablegen.fallbackStyle": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for TableGen, left empty to use clang-format.fallbackStyle"
         },
         "clang-format.assumeFilename": {
           "type": "string",
