@@ -25,5 +25,7 @@ jobs:
     - name: Build
       run: |
         npm install -g yarn
+      
+    - run:
         npm install --global vsce
-        vsce package
+    - run: vsce package
