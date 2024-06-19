@@ -24,7 +24,8 @@
     "Clang",
     "LLVM",
     "Protobuf",
-    "CUDA"
+    "CUDA",
+    "Metal"
   ],
   "main": "./out/src/extension",
   "activationEvents": [
@@ -43,7 +44,8 @@
     "onLanguage:glsl",
     "onLanguage:hlsl",
     "onLanguage:cuda",
-    "onLanguage:cuda-cpp"
+    "onLanguage:cuda-cpp",
+    "onLanguage:metal"
   ],
   "contributes": {
     "configuration": {
@@ -304,6 +306,21 @@
           "type": "string",
           "default": "",
           "description": "clang-format fallback style for CUDA, left empty to use clang-format.fallbackStyle"
+        },
+        "clang-format.language.metal.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "enable formatting for Metal Shader Files"
+        },
+        "clang-format.language.metal.style": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for Metal Shader Files, left empty to use clang-format.style"
+        },
+        "clang-format.language.metal.fallbackStyle": {
+          "type": "string",
+          "default": "",
+          "description": "clang-format fallback style for Metal Shader Files, left empty to use clang-format.fallbackStyle"
         },
         "clang-format.assumeFilename": {
           "type": "string",
