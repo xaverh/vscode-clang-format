@@ -159,30 +159,53 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private getStyle(document: vscode.TextDocument) {
     let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.style`);
-    if (ret.trim()) {
-      return ret.trim();
+
+    if (ret && ret.trim()) {
+      ret = this.replaceStyleVariables(ret.trim(), document);
+      if (ret && ret.trim()) {
+        return ret.trim();
+      }
     }
 
     ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
     if (ret && ret.trim()) {
-      return ret.trim();
-    } else {
-      return this.defaultConfigure.style;
+      ret = this.replaceStyleVariables(ret.trim(), document);
+      if (ret && ret.trim()) {
+        return ret.trim();
+      }
     }
+
+    return this.replaceStyleVariables(this.defaultConfigure.style, document);
   }
 
   private getFallbackStyle(document: vscode.TextDocument) {
     let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.fallbackStyle`);
-    if (strConf.trim()) {
-      return strConf;
+
+    if (strConf && strConf.trim()) {
+      strConf = this.replaceStyleVariables(strConf.trim(), document);
+      if (strConf && strConf.trim()) {
+        return strConf.trim();
+      }
     }
 
     strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
-    if (strConf.trim()) {
-      return strConf;
+    if (strConf && strConf.trim()) {
+      strConf = this.replaceStyleVariables(strConf.trim(), document);
+      if (strConf && strConf.trim()) {
+        return strConf.trim();
+      }
     }
 
-    return this.defaultConfigure.style;
+    return this.replaceStyleVariables(this.defaultConfigure.style, document);
+  }
+
+  private replaceStyleVariables(str: string, document: vscode.TextDocument): string {
+    return str.replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
+      .replace(/\${workspaceFolder}/g, this.getWorkspaceFolder())
+      .replace(/\${cwd}/g, process.cwd())
+      .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
+        return process.env[envName];
+      });
   }
 
   private getAssumedFilename(document: vscode.TextDocument) {
