@@ -1,15 +1,17 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
-import {MODES,
-        ALIAS} from './clangMode';
-import {getBinPath} from './clangPath';
+import {
+  MODES,
+  ALIAS
+} from './clangMode';
+import { getBinPath } from './clangPath';
 import sax = require('sax');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
 
 function getPlatformString() {
-  switch(process.platform) {
+  switch (process.platform) {
     case 'win32': return 'windows';
     case 'linux': return 'linux';
     case 'darwin': return 'osx';
@@ -52,7 +54,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         byte: 0,
         offset: 0
       };
-      let byteToOffset = function(editInfo: { length: number, offset: number }) {
+      let byteToOffset = function (editInfo: { length: number, offset: number }) {
         let offset = editInfo.offset;
         let length = editInfo.length;
 
@@ -81,20 +83,20 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         }
 
         switch (tag.name) {
-        case 'replacements':
-          return;
+          case 'replacements':
+            return;
 
-        case 'replacement':
-          currentEdit = {
-            length: parseInt(tag.attributes['length'].toString()),
-            offset: parseInt(tag.attributes['offset'].toString()),
-            text: ''
-          };
-          byteToOffset(currentEdit);
-          break;
+          case 'replacement':
+            currentEdit = {
+              length: parseInt(tag.attributes['length'].toString()),
+              offset: parseInt(tag.attributes['offset'].toString()),
+              text: ''
+            };
+            byteToOffset(currentEdit);
+            break;
 
-        default:
-          reject(`Unexpected tag ${tag.name}`);
+          default:
+            reject(`Unexpected tag ${tag.name}`);
         }
 
       };
@@ -191,14 +193,14 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     let parsedPath = path.parse(document.fileName);
     let fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
     return assumedFilename
-        .replace(/\${file}/g, document.fileName)
-        .replace(/\${fileNoExtension}/g, fileNoExtension)
-        .replace(/\${fileBasename}/g, parsedPath.base)
-        .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
-        .replace(/\${fileExtname}/g, parsedPath.ext);
+      .replace(/\${file}/g, document.fileName)
+      .replace(/\${fileNoExtension}/g, fileNoExtension)
+      .replace(/\${fileBasename}/g, parsedPath.base)
+      .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
+      .replace(/\${fileExtname}/g, parsedPath.ext);
   }
 
-  private getWorkspaceFolder(): string|undefined {
+  private getWorkspaceFolder(): string | undefined {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
       vscode.window.showErrorMessage("Unable to get the location of clang-format executable - no active workspace selected");
