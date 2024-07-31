@@ -267,11 +267,13 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
     return new Promise((resolve, reject) => {
+      const config = vscode.workspace.getConfiguration('clang-format');
       const style = this.getStyle(document);
       const fallbackStyle = this.getFallbackStyle(document);
       const assumedFilename = this.getAssumedFilename(document);
       const formatCommandBinPath = getBinPath(this.getExecutablePath());
       const codeContent = document.getText();
+      const additionalArgs = config.get<string>('additionalArguments');
 
       if (style.substring(0, 5) == "file:" && checkFileExists(style.substring(5)) === false) {
         vscode.window.showErrorMessage('The \'' + style + '\' style file is not available.  Please check your clang-format.style user setting and ensure it is installed.');
@@ -290,6 +292,10 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         `-fallback-style=${fallbackStyle}`,
         `-assume-filename=${assumedFilename}`
       ];
+
+      if (additionalArgs != '') {
+        formatArgs.push(additionalArgs);
+      }
 
       if (range) {
         let offset = document.offsetAt(range.start);

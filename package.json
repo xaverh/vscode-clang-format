@@ -309,6 +309,11 @@
           "type": "string",
           "default": "",
           "description": "When reading from stdin, clang-format assumes this filename to look for a style config file (with -style=file) and to determine the language."
+        },
+        "clang-format.additionalArguments": {
+          "type": "string",
+          "default": "",
+          "description": "Additional arguments to pass to clang-format"
         }
       }
     }
