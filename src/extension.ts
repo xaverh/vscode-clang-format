@@ -158,7 +158,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private getStyle(document: vscode.TextDocument) {
-    let ret = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.style`);
+    const config = vscode.workspace.getConfiguration('clang-format');
+    let ret = config.get<string>(`language.${this.getLanguage(document)}.style`);
 
     if (ret && ret.trim()) {
       ret = this.replaceStyleVariables(ret.trim(), document);
@@ -167,7 +168,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       }
     }
 
-    ret = vscode.workspace.getConfiguration('clang-format').get<string>('style');
+    ret = config.get<string>('style');
     if (ret && ret.trim()) {
       ret = this.replaceStyleVariables(ret.trim(), document);
       if (ret && ret.trim()) {
@@ -179,7 +180,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private getFallbackStyle(document: vscode.TextDocument) {
-    let strConf = vscode.workspace.getConfiguration('clang-format').get<string>(`language.${this.getLanguage(document)}.fallbackStyle`);
+    const config = vscode.workspace.getConfiguration('clang-format');
+    let strConf = config.get<string>(`language.${this.getLanguage(document)}.fallbackStyle`);
 
     if (strConf && strConf.trim()) {
       strConf = this.replaceStyleVariables(strConf.trim(), document);
@@ -188,7 +190,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       }
     }
 
-    strConf = vscode.workspace.getConfiguration('clang-format').get<string>('fallbackStyle');
+    strConf = config.get<string>('fallbackStyle');
     if (strConf && strConf.trim()) {
       strConf = this.replaceStyleVariables(strConf.trim(), document);
       if (strConf && strConf.trim()) {
@@ -209,7 +211,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private getAssumedFilename(document: vscode.TextDocument) {
-    const assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
+    const config = vscode.workspace.getConfiguration('clang-format');
+    const assumedFilename = config.get<string>('assumeFilename');
     const parsedPath = path.parse(document.fileName);
     const fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
 
