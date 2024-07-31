@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import path = require('path');
+import fs = require('fs');
 import {
   MODES,
   ALIAS
@@ -18,6 +19,14 @@ function getPlatformString() {
   }
 
   return 'unknown';
+}
+
+function checkFileExists(file: string): boolean {
+  try {
+    return fs.statSync(file).isFile();
+  } catch (err) {
+    return false;
+  }
 }
 
 export class ClangDocumentFormattingEditProvider implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
@@ -144,9 +153,12 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     }
 
     // replace placeholders, if present
+    if (execPath.includes('${workspaceFolder})')) {
+      execPath = execPath.replace('${workspaceFolder}', this.getWorkspaceFolder());
+    }
+
     return execPath
       .replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
-      .replace(/\${workspaceFolder}/g, this.getWorkspaceFolder())
       .replace(/\${cwd}/g, process.cwd())
       .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
         return process.env[envName];
@@ -202,8 +214,11 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private replaceStyleVariables(str: string, document: vscode.TextDocument): string {
+    if (str.includes('${workspaceFolder})')) {
+      str = str.replace('${workspaceFolder}', this.getWorkspaceFolder());
+    }
+
     return str.replace(/\${workspaceRoot}/g, vscode.workspace.rootPath)
-      .replace(/\${workspaceFolder}/g, this.getWorkspaceFolder())
       .replace(/\${cwd}/g, process.cwd())
       .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
         return process.env[envName];
@@ -216,7 +231,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
     const parsedPath = path.parse(document.fileName);
     const fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
 
-    if (assumedFilename === '') {
+    if (assumedFilename === '' || assumedFilename === null) {
       return document.fileName;
     }
 
@@ -252,14 +267,28 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
     return new Promise((resolve, reject) => {
+      const style = this.getStyle(document);
+      const fallbackStyle = this.getFallbackStyle(document);
+      const assumedFilename = this.getAssumedFilename(document);
       const formatCommandBinPath = getBinPath(this.getExecutablePath());
       const codeContent = document.getText();
 
+      if (style.substring(0, 5) == "file:" && checkFileExists(style.substring(5)) === false) {
+        vscode.window.showErrorMessage('The \'' + style + '\' style file is not available.  Please check your clang-format.style user setting and ensure it is installed.');
+        return resolve(null);
+      }
+
+      if (fallbackStyle.substring(0, 5) == "file:" &&
+        checkFileExists(fallbackStyle.substring(5)) === false) {
+        vscode.window.showErrorMessage('The \'' + fallbackStyle + '\' fallback style file is not available.  Please check your clang-format.fallbackStyle user setting and ensure it is installed.');
+        return resolve(null);
+      }
+
       let formatArgs = [
         '-output-replacements-xml',
-        `-style=${this.getStyle(document)}`,
-        `-fallback-style=${this.getFallbackStyle(document)}`,
-        `-assume-filename=${this.getAssumedFilename(document)}`
+        `-style=${style}`,
+        `-fallback-style=${fallbackStyle}`,
+        `-assume-filename=${assumedFilename}`
       ];
 
       if (range) {
