@@ -132,11 +132,11 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   /// Get execute name in clang-format.executable, if not found, use default value
   /// If configure has changed, it will get the new value
   private getExecutablePath() {
-    let platform = getPlatformString();
-    let config = vscode.workspace.getConfiguration('clang-format');
+    const platform = getPlatformString();
+    const config = vscode.workspace.getConfiguration('clang-format');
 
-    let platformExecPath = config.get<string>('executable.' + platform);
-    let defaultExecPath = config.get<string>('executable');
+    const platformExecPath = config.get<string>('executable.' + platform);
+    const defaultExecPath = config.get<string>('executable');
     let execPath = platformExecPath || defaultExecPath;
 
     if (!execPath) {
@@ -209,12 +209,14 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 
   private getAssumedFilename(document: vscode.TextDocument) {
-    let assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
+    const assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
+    const parsedPath = path.parse(document.fileName);
+    const fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
+
     if (assumedFilename === '') {
       return document.fileName;
     }
-    let parsedPath = path.parse(document.fileName);
-    let fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
+
     return assumedFilename
       .replace(/\${file}/g, document.fileName)
       .replace(/\${fileNoExtension}/g, fileNoExtension)
@@ -247,10 +249,8 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private doFormatDocument(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken): Thenable<vscode.TextEdit[]> {
     return new Promise((resolve, reject) => {
-      let filename = document.fileName;
-
-      let formatCommandBinPath = getBinPath(this.getExecutablePath());
-      let codeContent = document.getText();
+      const formatCommandBinPath = getBinPath(this.getExecutablePath());
+      const codeContent = document.getText();
 
       let formatArgs = [
         '-output-replacements-xml',
@@ -322,11 +322,9 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
   }
 }
 
-let diagnosticCollection: vscode.DiagnosticCollection;
-
 export function activate(ctx: vscode.ExtensionContext): void {
 
-  let formatter = new ClangDocumentFormattingEditProvider();
+  const formatter = new ClangDocumentFormattingEditProvider();
   let availableLanguages = {};
 
   MODES.forEach((mode) => {
