@@ -5,6 +5,7 @@ import {MODES,
         ALIAS} from './clangMode';
 import {getBinPath} from './clangPath';
 import sax = require('sax');
+import commandExists = require('command-exists');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
 
@@ -251,17 +252,19 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         workingPath = path.dirname(document.fileName);
       }
 
+      const formatCommandBinPathExists = commandExists.sync(formatCommandBinPath);
+      if (!formatCommandBinPathExists) {
+        vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
+        return reject(null);
+      }
+
       let stdout = '';
       let stderr = '';
-      let child = cp.spawn(formatCommandBinPath, formatArgs, { cwd: workingPath });
+      let child = cp.spawn(formatCommandBinPath, formatArgs, { cwd: workingPath, shell: true });
       child.stdin.end(codeContent);
       child.stdout.on('data', chunk => stdout += chunk);
       child.stderr.on('data', chunk => stderr += chunk);
       child.on('error', err => {
-        if (err && (<any>err).code === 'ENOENT') {
-          vscode.window.showInformationMessage('The \'' + formatCommandBinPath + '\' command is not available.  Please check your clang-format.executable user setting and ensure it is installed.');
-          return resolve(null);
-        }
         return reject(err);
       });
       child.on('close', code => {
