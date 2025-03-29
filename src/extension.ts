@@ -3,16 +3,17 @@ import cp = require('child_process');
 import path = require('path');
 import {MODES,
         ALIAS} from './clangMode';
+import {EXT_ALIAS} from './extAlias';
 import {getBinPath} from './clangPath';
 import sax = require('sax');
 
 export let outputChannel = vscode.window.createOutputChannel('Clang-Format');
 
 function getPlatformString() {
-  switch(process.platform) {
-    case 'win32': return 'windows';
-    case 'linux': return 'linux';
-    case 'darwin': return 'osx';
+  switch (process.platform) {
+  case 'win32': return 'windows';
+  case 'linux': return 'linux';
+  case 'darwin': return 'osx';
   }
 
   return 'unknown';
@@ -96,7 +97,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
         default:
           reject(`Unexpected tag ${tag.name}`);
         }
-
       };
 
       parser.ontext = (text) => {
@@ -123,7 +123,6 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
       parser.write(xml);
       parser.end();
-
     });
   }
 
@@ -185,28 +184,32 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
 
   private getAssumedFilename(document: vscode.TextDocument) {
     let assumedFilename = vscode.workspace.getConfiguration('clang-format').get<string>('assumeFilename');
-    if (assumedFilename === '') {
-      return document.fileName;
-    }
     let parsedPath = path.parse(document.fileName);
     let fileNoExtension = path.join(parsedPath.dir, parsedPath.name);
+    if (assumedFilename === '') {
+      const extAlias = EXT_ALIAS[parsedPath.ext];
+      if (extAlias) {
+        return fileNoExtension + extAlias;
+      }
+      return document.fileName;
+    }
     return assumedFilename
-        .replace(/\${file}/g, document.fileName)
-        .replace(/\${fileNoExtension}/g, fileNoExtension)
-        .replace(/\${fileBasename}/g, parsedPath.base)
-        .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
-        .replace(/\${fileExtname}/g, parsedPath.ext);
+      .replace(/\${file}/g, document.fileName)
+      .replace(/\${fileNoExtension}/g, fileNoExtension)
+      .replace(/\${fileBasename}/g, parsedPath.base)
+      .replace(/\${fileBasenameNoExtension}/g, parsedPath.name)
+      .replace(/\${fileExtname}/g, parsedPath.ext);
   }
 
   private getWorkspaceFolder(): string|undefined {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-      vscode.window.showErrorMessage("Unable to get the location of clang-format executable - no active workspace selected");
+      vscode.window.showErrorMessage('Unable to get the location of clang-format executable - no active workspace selected');
       return undefined;
     }
 
     if (!vscode.workspace.workspaceFolders) {
-      vscode.window.showErrorMessage("Unable to get the location of clang-format executable - no workspaces available");
+      vscode.window.showErrorMessage('Unable to get the location of clang-format executable - no workspaces available');
       return undefined
     }
 
