@@ -319,7 +319,7 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/node": "^13.7.0",
+    "@types/node": "^22.13.17",
     "@types/sax": "^1.2.1",
     "typescript": "^5.8.2",
     "vsce": "^2.14.0",
