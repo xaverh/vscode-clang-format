@@ -322,7 +322,7 @@
     "@types/node": "^22.13.17",
     "@types/sax": "^1.2.7",
     "typescript": "^5.8.2",
-    "vsce": "^2.14.0",
+    "vsce": "^2.15.0",
     "vscode": "^1.1.37"
   },
   "icon": "clang-format.png",
