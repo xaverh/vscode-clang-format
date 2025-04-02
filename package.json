@@ -321,10 +321,10 @@
   "devDependencies": {
     "@types/node": "^22.13.17",
     "@types/sax": "^1.2.7",
-    "@types/vscode": "^1.96.0"
-    "@vscode/test-electron": "^2.4.1"
-    "@vscode/vsce": "^3.3.2"
-    "typescript": "^5.8.2",
+    "@types/vscode": "^1.96.0",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^3.3.2",
+    "typescript": "^5.8.2"
   },
   "icon": "clang-format.png",
   "repository": {
