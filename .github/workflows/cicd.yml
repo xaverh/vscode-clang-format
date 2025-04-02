@@ -1,0 +1,125 @@
+name: Build, Lint, Test and Deploy
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - master
+  release:
+    types:
+      - published
+
+jobs:
+  build-lint-test:
+    name: Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        node:
+          - 22
+    outputs:
+      vsixPath: ${{ steps.packageExtension.outputs.vsixPath }}
+    steps:
+      - name: Setup GIT for Windows
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+        if: runner.os == 'Windows'
+      - name: Checkout Source
+        uses: actions/checkout@v2
+      - name: Install Node ${{ matrix.node }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Linter
+        run: npm run lint
+      - name: Build Code
+        run: npm run build
+      - name: Run Unit Tests on Windows or macOS
+        run: npm run test
+        if: runner.os != 'Linux'
+      - name: Run Unit Tests on Linux
+        run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - name: Upload Coverage Report
+        uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
+          flag-name: Test on ${{ matrix.os }}
+      - name: Package Extension
+        id: packageExtension
+        uses: HaaLeo/publish-vscode-extension@v2
+        with:
+          pat: stub
+          dryRun: true
+      - name: Upload Extension Package as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}
+          path: ${{ steps.packageExtension.outputs.vsixPath }}
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build-lint-test
+    steps:
+      - name: Let Coveralls know that all tests have finished
+        uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+
+  publish:
+    name: Publish Github Action
+    needs:
+      - build-lint-test
+      - coverage
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2
+      - name: Install Node v22
+        uses: actions/setup-node@v1
+        with:
+          node-version: 22
+      - name: Install Dependencies
+        run: npm ci
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ubuntu-latest
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          body: |
+            # Summary
+            See [changelog](https://github.com/HaaLeo/vscode-timing/blob/master/CHANGELOG.md#changelog)
+          name: ${{ github.ref_name }}
+          fail_on_unmatched_files: true
+          files: ${{ needs.build-lint-test.outputs.vsixPath }}
+      - name: Publish to Visual Studio Marketplace
+        uses: HaaLeo/publish-vscode-extension@v2
+        with:
+          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          extensionFile: ${{ needs.build-lint-test.outputs.vsixPath }}
+          registryUrl: https://marketplace.visualstudio.com
+      - name: Publish to Open VSX Registry
+        uses: HaaLeo/publish-vscode-extension@v2
+        with:
+          pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          extensionFile: ${{ needs.build-lint-test.outputs.vsixPath }}
