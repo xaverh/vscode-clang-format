@@ -4,7 +4,7 @@
 [![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/xaver.clang-format.svg)](https://marketplace.visualstudio.com/items?itemName=xaver.clang-format)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs/xaver.clang-format.svg)](https://marketplace.visualstudio.com/items?itemName=xaver.clang-format)
 
-[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Objective-C++/Protobuf code. It can be configured with a config file named `.clang-format` within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+[Clang-Format](http://clang.llvm.org/docs/ClangFormat.html) is a tool to format C/C++/Java/JavaScript/Objective-C/Objective-C++/Metal/Protobuf code. It can be configured with a config file named `.clang-format` within the working folder or a parent folder. Configuration see: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 
 ## Usage
