@@ -147,7 +147,7 @@ export class ClangDocumentFormattingEditProvider implements vscode.DocumentForma
       .replace(/\${workspaceFolder}/g, this.getWorkspaceFolder())
       .replace(/\${cwd}/g, process.cwd())
       .replace(/\${env\.([^}]+)}/g, (sub: string, envName: string) => {
-        return process.env[envName];
+        return process.env[envName] || '';
       });
   }
 
